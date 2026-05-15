@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 
 const __dirname = import.meta.dirname;
-const filePath = path.join(__dirname, "MaestroProductos.json");
+const filePath = path.join(__dirname, "../data/MaestroProductos.json");
 
 const obtenerTodos = async () => {
   return await leerArchivo();
