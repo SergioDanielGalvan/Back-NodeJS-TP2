@@ -81,7 +81,7 @@ export const getProductoByEAN = async (req, res) => {
 // POST /maestroproductos
 export const createProducto = async (req, res) => {
   try {
-    const nuevoProducto = await maestroService.crearProductoCatalogo( req.body );
+    const nuevoProducto = await maestroService.crearProductoCatalogo(req.body);
     res.status(201).json(nuevoProducto);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -89,7 +89,7 @@ export const createProducto = async (req, res) => {
 };
 
 // PUT /maestroproductos/:id
-export const updateProducto = async (req, res) => {
+export const updateProductoById = async (req, res) => {
   try {
     const { id } = req.params;
 

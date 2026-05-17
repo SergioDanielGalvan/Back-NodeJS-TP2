@@ -1,5 +1,3 @@
-import { randomUUID } from "crypto"; // actualmente usamos numeros enteros en el json, pero a la larga tenemos que usar uuids
-// import repo from "../repositorios/maestroProductosRepository.js";
 import repo from "../modelos/MaestroProductos.js";
 
 class MaestroProductosService {
@@ -23,8 +21,13 @@ class MaestroProductosService {
       throw new Error("Ya existe un producto con ese EAN");
     }
 
+    const newId =
+      productos.length > 0
+        ? Math.max(...productos.map((p) => p.idProducto)) + 1
+        : 1;
+
     const nuevoProducto = {
-      idProducto: randomUUID(),
+      idProducto: newId,
       EAN: datos.EAN,
       nombre: datos.nombre,
       categorias: datos.categorias,

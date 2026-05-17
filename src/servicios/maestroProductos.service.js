@@ -32,7 +32,7 @@ class MaestroProductosService {
       nombre: datos.nombre,
       categorias: datos.categorias,
       descripcion: datos.descripcion || "",
-      unidadMedida: datos.unidadMedida,
+      unidadMedida: datos.unidadMedida || "07", // unidad
       envase: datos.envase,
       stockMinimo: Number(datos.stockMinimo),
       puntoPedido: Number(datos.puntoPedido),

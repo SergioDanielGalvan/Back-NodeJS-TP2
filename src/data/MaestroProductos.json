@@ -1,0 +1,68 @@
+[
+  {
+    "idProducto": 1,
+    "nombre": "Lavandina Ayudín Original 4 Litros",
+    "categorias": [
+      "Lavandinas",
+      "Lavandinas líquidas"
+    ],
+    "EAN": "7793253006716",
+    "stockminimo": 100,
+    "puntoPedido": 120
+  },
+  {
+    "idProducto": 3,
+    "nombre": "Lavandina En Gel Original Odex Bot 700 Ml",
+    "categorias": [
+      "Lavandinas",
+      "Lavandinas líquidas"
+    ],
+    "EAN": "7791905024248",
+    "stockminimo": 230,
+    "puntoPedido": 250
+  },
+  {
+    "idProducto": 4,
+    "nombre": "Detergente Magistral Platinum Limón Amarillo",
+    "categorias": [
+      "Cocina",
+      "Detergentes"
+    ],
+    "EAN": "7790990003398",
+    "stockminimo": 50,
+    "puntoPedido": 70
+  },
+  {
+    "idProducto": 5,
+    "nombre": "Detergente Concentrado Limón Ala 500ml",
+    "categorias": [
+      "Cocina",
+      "Detergentes"
+    ],
+    "EAN": "7791290794306",
+    "stockminimo": 100,
+    "puntoPedido": 120
+  },
+  {
+    "idProducto": 6,
+    "nombre": "Limpiador Líquido Para Pisos Procenex Lavanda 1.8l",
+    "categorias": [
+      "Pisos y Superficies",
+      "Detergentes"
+    ],
+    "EAN": "7791130683760",
+    "stockminimo": 100,
+    "puntoPedido": 120
+  },
+  {
+    "idProducto": 7,
+    "nombre": "Limpiador De Pisos Plastificados Y Flotantes Cif 750 Ml",
+    "categorias": [
+      "Pisos y Superficies",
+      "Detergentes"
+    ],
+    "EAN": "7791290793354",
+    "stockminimo": 100,
+    "puntoPedido": 120
+  }
+]
