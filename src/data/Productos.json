@@ -26,5 +26,13 @@
     "precio": 3460,
     "stock": 220,
     "FechaVencimiento": "2027-01-10"
+  },
+  {
+    "idLote": 4,
+    "idProducto": 6,
+    "precio": 4160,
+    "stock": 420,
+    "FechaVencimiento": "2027-02-15"
   }
+
 ]

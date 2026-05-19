@@ -1,6 +1,6 @@
 // app.js
 import express from 'express';
-// import cors from 'cors';
+import cors from 'cors';
 import methodOverride from "method-override";
 import path from 'path';
 import { fileURLToPath } from 'url';

@@ -89,7 +89,7 @@ export const createProducto = async (req, res) => {
 };
 
 // PUT /maestroproductos/:id
-export const updateProducto = async (req, res) => {
+export const updateProductoById = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -109,7 +109,7 @@ export const updateProducto = async (req, res) => {
 };
 
 // DELETE /maestroproductos/:id
-export const deleteProducto = async (req, res) => {
+export const deleteProductoById = async (req, res) => {
   try {
     const { id } = req.params;
 

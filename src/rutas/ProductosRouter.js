@@ -4,31 +4,34 @@ import { Router } from "express";
 const router = Router();
 
 import {
-  getAllProductos,
-  getProductoById,
-  getProductoByNombre,
-  getAllProductosByCategoria,
-  getAllProductosWithStock,
+  crearRegistroCompra,
   createProducto,
   deleteProductoById,
-  updateProductoWithStock,
+  getAllProductos,
+  getAllProductosByNombre,
+  getAllProductosByCategoria,
+  getAllProductosWithStock,
+  getProductoById,
+  getProductoByNombre,
   updateProductoWithPrecio,
-  crearRegistroCompra
+  updateProductoWithStock,
 } from "../controladores/ProductosControlador.js";
 
 // Rutas de productos Públicas
-router.get("/productos", getAllProductos);
-router.get("/productos/:id", getProductoById);
-router.get("/productos/nombre/:nombre", getProductoByNombre);
-router.get("/productos/categoria", getAllProductosByCategoria);
+router.get("/", getAllProductos);
+router.get("/:id", getProductoById);
+router.get("/nombre/:nombre", getProductoByNombre);
+router.get("/nombres/:nombre", getAllProductosByNombre);
+router.get("/categoria/:categoria", getAllProductosByCategoria);
 
 // Rutas de productos Privadas
-router.get("/productos/stock", getAllProductosWithStock);
-router.post("/productos", createProducto);
+router.get("/stock", getAllProductosWithStock);
+router.post("/", createProducto);
+
 // Privada y Admin
-router.delete("/productos/:id", deleteProductoById);
-router.put("/productos/stock/:id", updateProductoWithStock);
-router.put("/productos/precio/:id", updateProductoWithPrecio);
-router.post("/productos/compra", crearRegistroCompra);
+router.delete("/:id", deleteProductoById);
+router.put("/stock/:id", updateProductoWithStock);
+router.put("/precio/:id", updateProductoWithPrecio);
+router.post("/compra", crearRegistroCompra);
 
 export default router;
