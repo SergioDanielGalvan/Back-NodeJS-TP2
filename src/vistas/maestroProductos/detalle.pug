@@ -1,0 +1,17 @@
+doctype html
+html
+	head
+		title Maestro Productos
+	body
+		h1 Detalle del Producto
+
+		p ID: #{producto.idProducto}
+		p Nombre: #{producto.nombre}
+		p EAN: #{producto.EAN}
+		p Categorías: #{producto.categorias.join(", ")}
+		p Stock mínimo: #{producto.stockMinimo}
+		p Punto de pedido: #{producto.puntoPedido}
+		p Unidad de medida: #{producto.unidadMedida}
+		p Envase: #{producto.envase}
+
+		a(href="/maestroproductos") Volver

@@ -1,0 +1,20 @@
+{
+  "name": "tp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "type": "module",
+  "author": "Sergio Daniel Galván",
+  "license": "MIT",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "vercel-build": "npm install"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pug": "^3.0.4"
+  }
+}

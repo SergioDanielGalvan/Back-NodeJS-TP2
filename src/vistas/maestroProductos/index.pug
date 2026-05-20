@@ -1,0 +1,29 @@
+doctype html
+html
+	head
+		title Maestro Productos
+	body
+		h1 Lista de Productos
+
+		a(href="/maestroproductos/nuevo") Crear nuevo producto
+
+		table(border="1")
+			thead
+			tr
+				th ID
+				th Nombre
+				th Categorías
+				th Acciones
+			tbody
+			each producto in productos
+				tr
+				td= producto.idProducto
+				td= producto.nombre
+				td= producto.categorias.join(", ")
+				td
+					a(href=`/maestroproductos/${producto.idProducto}`) Ver
+					|  |
+					a(href=`/maestroproductos/${producto.idProducto}/editar`) Editar
+					|  |
+					form(action=`/maestroproductos/${producto.idProducto}?_method=DELETE` method="POST" style="display:inline")
+						button(type="submit") Eliminar

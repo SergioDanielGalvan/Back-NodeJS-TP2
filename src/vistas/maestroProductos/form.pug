@@ -1,0 +1,46 @@
+doctype html
+html
+	head
+		title Maestro Productos
+	body
+		h2= producto ? "Editar Producto" : "Crear Producto"
+
+		form(action=action method="POST")
+			label Nombre:
+			input(type="text" name="nombre" value=producto ? producto.nombre : "")
+
+			br
+
+			label EAN:
+			input(type="text" name="EAN" value=producto ? producto.EAN : "")
+
+			br
+
+			label Categorías (separadas por coma):
+			input(type="text" name="categorias" value=producto ? producto.categorias.join(",") : "")
+
+			br
+
+			label Stock mínimo:
+			input(type="number" name="stockMinimo" value=producto ? producto.stockMinimo : "")
+
+			br
+
+			label Punto de pedido:
+			input(type="number" name="puntoPedido" value=producto ? producto.puntoPedido : "")
+
+			br
+
+			label Unidad de medida:
+			input(type="text" name="unidadMedida" value=producto ? producto.unidadMedida : "")
+
+			br
+
+			label Envase:
+			input(type="text" name="envase" value=producto ? producto.envase : "")
+
+			br
+
+			button(type="submit") Guardar
+
+		a(href="/maestroproductos") Volver
