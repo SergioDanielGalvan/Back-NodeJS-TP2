@@ -373,3 +373,4 @@ export const registrarCompraLote = async (dataCompra) => {
     throw error;
   }
 };
+

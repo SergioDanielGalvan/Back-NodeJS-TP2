@@ -115,6 +115,28 @@ const escribirArchivo = async (data) => {
   await fs.writeFile(filePath, JSON.stringify(data, null, 2));
 };
 
+function filtrarPorCategoria(productos, categoriaBuscada) {
+  return productos.filter(producto =>
+    producto.categorias.some(cat => cat.toLowerCase() === categoriaBuscada.toLowerCase())
+  );
+}
+function filtrarPorMultiplesCategoriasOR(productos, categoriasBuscadas) {
+  // categoriasBuscadas es un array, ej: ["Tecnología", "Audio"]
+  return productos.filter(producto =>
+    categoriasBuscadas.some(catBuscada =>
+      producto.categorias.some(catProd => catProd.toLowerCase() === catBuscada.toLowerCase())
+    )
+  );
+}
+
+function filtrarPorMultiplesCategoriasAND(productos, categoriasRequeridas) {
+  return productos.filter(producto =>
+    categoriasRequeridas.every(catRequerida =>
+      producto.categorias.some(catProd => catProd.toLowerCase() === catRequerida.toLowerCase())
+    )
+  );
+}
+
 export default {
   obtenerTodos,
   obtenerPorId,
