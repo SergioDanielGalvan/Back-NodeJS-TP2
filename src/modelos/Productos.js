@@ -43,10 +43,60 @@ export const getProductoById = async (id) => {
     );
 
     const productos = JSON.parse(data);
-
-    const producto = products.find((item) => item.id == id);
+    const producto = productos.find((item) => item.idLote == id);
 
     return producto;
+  } catch (error) {
+    console.error(error);
+  } finally {
+  }
+};
+
+export const getProductoByIdProducto = async (idProducto) => {
+  try {
+    const data = await fs.readFile(
+      path.join(__dirname, "../data/Productos.json"),
+      "utf-8",
+    );
+
+    const productos = JSON.parse(data);
+    const producto = productos.find((item) => item.idProducto == idProducto);
+
+    return producto;
+  } catch (error) {
+    console.error(error);
+  } finally {
+  }
+};
+
+export const getAllProductoByNombre = async (nombre) => {
+  try {
+    const data = await fs.readFile(
+      path.join(__dirname, "../data/Productos.json"),
+      "utf-8",
+    );
+
+    const productos = JSON.parse(data);
+    const productosFiltrados = productos.filter((item) =>
+      item.nombre.toLowerCase().includes(nombre.toLowerCase()),
+    );
+
+    const dataMaestro = await fs.readFile(
+      path.join(__dirname, "../data/MaestroProductos.json"),
+      "utf-8",
+    );
+    const productosMaestro = JSON.parse(dataMaestro);
+    productosFiltrados.forEach((producto) => {
+      const productoMaestro = productosMaestro.find(
+        (item) => item.idProducto === producto.idProducto,
+      );
+      if (productoMaestro) {
+        producto.nombre = productoMaestro.nombre;
+        producto.categorias = productoMaestro.categorias;
+        producto.EAN = productoMaestro.EAN;
+      }
+    });
+    return productosFiltrados;
   } catch (error) {
     console.error(error);
   } finally {
@@ -110,7 +160,7 @@ export const createProducto = async (nombre, precio, categorias, stock) => {
       "utf-8",
     );
     const productos = JSON.parse(data);
-    const ids = productos.map((producto) => producto.id);
+    const ids = productos.map((producto) => producto.idLote);
     const maxId = Math.max(...ids);
     const newId = maxId + 1;
   } catch (error) {
@@ -155,7 +205,7 @@ export const deleteProductoById = async (id) => {
       "utf-8",
     );
     const productos = JSON.parse(data);
-    const index = productos.findIndex((producto) => producto.id === id);
+    const index = productos.findIndex((producto) => producto.idLote === id);
     if (index === -1) {
       throw new Error("Producto no encontrado");
     }

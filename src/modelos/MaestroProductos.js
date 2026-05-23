@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+//import { getProductoByNombre } from "./Productos";
 
 const __dirname = import.meta.dirname;
 const filePath = path.join(__dirname, "../data/MaestroProductos.json");
@@ -78,6 +79,17 @@ const getAllProductos = async (categoria) => {
   }
 };
 
+const getProductoById = async (id) => {
+  const productos = await leerArchivo();
+  return productos.find((p) => String(p.idProducto) === String(id));
+};
+
+const getProductoByNombre = async (nombre) => {
+  const productos = await leerArchivo();
+  //return productos.find((p) => p.nombre === nombre);
+  return productos.find((p) => p.nombre.includes(nombre));
+};
+
 const createProducto = async (producto) => {
   const productos = await leerArchivo();
   const newId =
@@ -106,5 +118,7 @@ export default {
   actualizar,
   eliminar,
   getAllProductos,
+  getProductoById,
+  getProductoByNombre,
   createProducto,
 };

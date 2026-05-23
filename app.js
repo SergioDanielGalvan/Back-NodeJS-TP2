@@ -16,6 +16,10 @@ const app = express();
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "src/vistas"));
 
+// Archivos estáticos
+app.use('/imagenes', express.static(path.join(__dirname, 'src/vistas/imagenes')));
+app.use(express.static(path.join(__dirname, 'src/vistas')));
+
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
