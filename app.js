@@ -3,6 +3,7 @@ import express from "express";
 import methodOverride from "method-override";
 import path from "path";
 import { fileURLToPath } from "url";
+import { connectDB } from "./src/config/mongodb.js";
 import maestroProductosRouter from "./src/rutas/MaestroProductosRouter.js";
 import maestroProductosRouterViews from "./src/rutas/MaestroProductosRouterViews.js";
 import productosRouter from "./src/rutas/ProductosRouter.js";
@@ -44,6 +45,8 @@ app.use("/maestroproductos", maestroProductosRouterViews);
 app.use((req, res) => {
   res.status(404).render("404", { titulo: "Página no encontrada" });
 });
+
+connectDB();
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () =>
