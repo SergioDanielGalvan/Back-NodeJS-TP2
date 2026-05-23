@@ -1,11 +1,60 @@
-var express = require('express');
-var router = express.Router();
-const usuariosControl = require("../controladores/UsuariosControlador");
+import mongoose from "mongoose";
 
-/* GET users listing. */
-router.get('/', usuariosControl.getAll);
-router.post('/', usuariosControl.create);
-router.delete("/:id", usuariosControl.deleteUsuario);
-router.post('/login', usuariosControl.loginUsuario);
+const usuarioSchema = new mongoose.Schema(
+  {
+    nombre: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
-module.exports = router;
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+
+    password: {
+      type: String,
+      required: true,
+    },
+
+    rol: {
+      type: String,
+      enum: ["admin", "operador"],
+      default: "operador",
+    },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  },
+);
+
+usuarioSchema.statics.obtenerTodos = async function () {
+  return await this.find().select("-password").lean();
+};
+
+usuarioSchema.statics.obtenerPorId = async function (id) {
+  return await this.findById(id).select("-password").lean();
+};
+
+usuarioSchema.statics.buscarPorEmail = async function (email) {
+  return await this.findOne({
+    email: email.toLowerCase(),
+  });
+};
+
+usuarioSchema.statics.crearUsuario = async function (usuario) {
+  return await this.create(usuario);
+};
+
+usuarioSchema.statics.eliminarUsuario = async function (id) {
+  return await this.findByIdAndDelete(id);
+};
+
+const Usuario = mongoose.model("Usuario", usuarioSchema);
+
+export default Usuario;
