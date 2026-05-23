@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import maestroProductosRouter from "./src/rutas/MaestroProductosRouter.js";
 import maestroProductosRouterViews from "./src/rutas/MaestroProductosRouterViews.js";
 import productosRouter from "./src/rutas/ProductosRouter.js";
+import usersRouter from "./src/rutas/UsuariosRouter.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
