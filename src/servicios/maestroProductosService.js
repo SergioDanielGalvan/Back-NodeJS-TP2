@@ -6,20 +6,23 @@ class MaestroProductosService {
   }
 
   async obtenerProductoCatalogo(id) {
-    if (!id) throw new Error("ID requerido");
+    if (!id) {
+      throw new Error("ID requerido");
+    }
+
     return await repo.obtenerPorId(id);
   }
 
   async crearProductoCatalogo(datos) {
     this.validarProducto(datos);
 
-    const productos = await repo.obtenerTodos();
+    const existe = await repo.getProductoByEAN(datos.EAN);
 
-    // Evitar duplicado por EAN
-    const existe = productos.find((p) => p.EAN === datos.EAN);
     if (existe) {
       throw new Error("Ya existe un producto con ese EAN");
     }
+
+    const productos = await repo.obtenerTodos();
 
     const newId =
       productos.length > 0
@@ -30,13 +33,13 @@ class MaestroProductosService {
       idProducto: newId,
       EAN: datos.EAN,
       nombre: datos.nombre,
-      categorias: datos.categorias,
+      categorias: datos.categorias || [],
       descripcion: datos.descripcion || "",
       unidadMedida: datos.unidadMedida,
       envase: datos.envase,
-      stockMinimo: Number(datos.stockMinimo),
-      puntoPedido: Number(datos.puntoPedido),
-      fechaAlta: new Date().toISOString(),
+      stockMinimo: Number(datos.stockMinimo || 0),
+      puntoPedido: Number(datos.puntoPedido || 0),
+      fechaAlta: new Date(),
       operador: datos.operador || "sistema",
     };
 
@@ -44,12 +47,25 @@ class MaestroProductosService {
   }
 
   async editarProductoCatalogo(id, datos) {
-    if (!id) throw new Error("ID requerido");
+    if (!id) {
+      throw new Error("ID requerido");
+    }
 
     const producto = await repo.obtenerPorId(id);
-    if (!producto) return null;
+
+    if (!producto) {
+      return null;
+    }
 
     this.validarProducto(datos, true);
+
+    if (datos.EAN) {
+      const productoConEAN = await repo.getProductoByEAN(datos.EAN);
+
+      if (productoConEAN && productoConEAN.idProducto !== Number(id)) {
+        throw new Error("Ya existe un producto con ese EAN");
+      }
+    }
 
     const actualizado = {
       ...producto,
@@ -60,61 +76,72 @@ class MaestroProductosService {
   }
 
   async eliminarProductoCatalogo(id) {
-    if (!id) throw new Error("ID requerido");
+    if (!id) {
+      throw new Error("ID requerido");
+    }
 
     const producto = await repo.obtenerPorId(id);
-    if (!producto) return null;
 
-    // TODO: validar relación con productos (lotes)
+    if (!producto) {
+      return null;
+    }
+
     return await repo.eliminar(id);
   }
 
   async buscarPorNombre(nombre) {
-    const productos = await repo.obtenerTodos();
-
-    return productos.filter((p) =>
-      p.nombre.toLowerCase().includes(nombre.toLowerCase()),
-    );
+    return await repo.getProductoByNombre(nombre);
   }
 
   async buscarPorCategoria(categoria) {
-    const productos = await repo.obtenerTodos();
-
-    return productos.filter((p) =>
-      p.categorias?.some((cat) =>
-        cat.toLowerCase().includes(categoria.toLowerCase()),
-      ),
-    );
+    return await repo.getProductosByCategoria(categoria);
   }
 
   async buscarPorEAN(ean) {
     this.validarEAN(ean);
 
-    const productos = await repo.obtenerTodos();
-    return productos.find((p) => p.EAN === ean);
+    return await repo.getProductoByEAN(ean);
   }
 
   validarProducto(datos, parcial = false) {
     if (!parcial) {
-      if (!datos.EAN) throw new Error("EAN requerido");
-      if (!datos.nombre) throw new Error("Nombre requerido");
-      if (!datos.unidadMedida) throw new Error("Unidad de medida requerida");
-      if (!datos.envase) throw new Error("Envase requerido");
+      if (!datos.EAN) {
+        throw new Error("EAN requerido");
+      }
+
+      if (!datos.nombre) {
+        throw new Error("Nombre requerido");
+      }
+
+      if (!datos.unidadMedida) {
+        throw new Error("Unidad de medida requerida");
+      }
+
+      if (!datos.envase) {
+        throw new Error("Envase requerido");
+      }
     }
 
-    if (datos.EAN) this.validarEAN(datos.EAN);
+    if (datos.EAN) {
+      this.validarEAN(datos.EAN);
+    }
 
-    if (datos.stockMinimo < 0) {
+    if (datos.stockMinimo !== undefined && datos.stockMinimo < 0) {
       throw new Error("Stock mínimo inválido");
     }
 
-    if (datos.puntoPedido < datos.stockMinimo) {
+    if (
+      datos.puntoPedido !== undefined &&
+      datos.stockMinimo !== undefined &&
+      datos.puntoPedido < datos.stockMinimo
+    ) {
       throw new Error("Punto de pedido no puede ser menor al stock mínimo");
     }
   }
 
   validarEAN(ean) {
     const regex = /^[0-9]{13}$/;
+
     if (!regex.test(ean)) {
       throw new Error("EAN inválido (13 dígitos)");
     }

@@ -1,151 +1,135 @@
-import fs from "fs/promises";
-import path from "path";
+import mongoose from "mongoose";
 
-const __dirname = import.meta.dirname;
-const filePath = path.join(__dirname, "../data/MaestroProductos.json");
+const maestroProductoSchema = new mongoose.Schema(
+  {
+    idProducto: {
+      type: Number,
+      unique: true,
+      required: true,
+    },
 
-const obtenerTodos = async () => {
-  return await leerArchivo();
+    EAN: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+
+    nombre: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    categorias: {
+      type: [String],
+      default: [],
+    },
+
+    descripcion: {
+      type: String,
+      default: "",
+    },
+
+    unidadMedida: {
+      type: String,
+      required: true,
+    },
+
+    envase: {
+      type: String,
+      required: true,
+    },
+
+    stockMinimo: {
+      type: Number,
+      default: 0,
+    },
+
+    puntoPedido: {
+      type: Number,
+      default: 0,
+    },
+
+    fechaAlta: {
+      type: Date,
+      default: Date.now,
+    },
+
+    operador: {
+      type: String,
+      default: "sistema",
+    },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  },
+);
+
+maestroProductoSchema.statics.obtenerTodos = async function () {
+  return await this.find().lean();
 };
 
-const obtenerPorId = async (id) => {
-  const productos = await leerArchivo();
-  return productos.find((p) => String(p.idProducto) === String(id));
+maestroProductoSchema.statics.obtenerPorId = async function (id) {
+  return await this.findOne({
+    idProducto: Number(id),
+  }).lean();
 };
 
-const guardar = async (producto) => {
-  const productos = await leerArchivo();
-
-  productos.push(producto);
-
-  await escribirArchivo(productos);
-
-  return producto;
+maestroProductoSchema.statics.guardar = async function (producto) {
+  return await this.create(producto);
 };
 
-const actualizar = async (id, productoActualizado) => {
-  const productos = await leerArchivo();
-
-  const index = productos.findIndex((p) => String(p.idProducto) === String(id));
-
-  if (index === -1) return null;
-
-  productos[index] = {
-    ...productos[index],
-    ...productoActualizado,
-  };
-
-  await escribirArchivo(productos);
-
-  return productos[index];
+maestroProductoSchema.statics.actualizar = async function (
+  id,
+  productoActualizado,
+) {
+  return await this.findOneAndUpdate(
+    {
+      idProducto: Number(id),
+    },
+    productoActualizado,
+    {
+      new: true,
+    },
+  ).lean();
 };
 
-const eliminar = async (id) => {
-  const productos = await leerArchivo();
-
-  const index = productos.findIndex((p) => String(p.idProducto) === String(id));
-
-  if (index === -1) return null;
-
-  productos.splice(index, 1);
-
-  await escribirArchivo(productos);
-
-  return true;
+maestroProductoSchema.statics.eliminar = async function (id) {
+  return await this.findOneAndDelete({
+    idProducto: Number(id),
+  });
 };
 
-const getAllProductos = async (categoria) => {
-  try {
-    const productos = await leerArchivo(); // ya lee MaestroProductos.json
-    if (categoria) {
-      return productos.filter(
-        (p) =>
-          p.categorias &&
-          p.categorias.some((cat) =>
-            cat.toLowerCase().includes(categoria.toLowerCase()),
-          ),
-      );
-    }
-    return productos;
-  } catch (error) {
-    console.error(error);
-  }
+maestroProductoSchema.statics.getProductoByNombre = async function (nombre) {
+  return await this.find({
+    nombre: {
+      $regex: nombre,
+      $options: "i",
+    },
+  }).lean();
 };
 
-const getProductoById = async (id) => {
-  const productos = await leerArchivo();
-  return productos.find((p) => String(p.idProducto) === String(id));
+maestroProductoSchema.statics.getProductosByCategoria = async function (
+  categoria,
+) {
+  return await this.find({
+    categorias: {
+      $regex: categoria,
+      $options: "i",
+    },
+  }).lean();
 };
 
-const getProductoByNombre = async (nombre) => {
-  const productos = await leerArchivo();
-  return productos.find((p) => p.nombre.includes(nombre));
+maestroProductoSchema.statics.getProductoByEAN = async function (ean) {
+  return await this.findOne({
+    EAN: ean,
+  }).lean();
 };
 
-const createProducto = async (producto) => {
-  const productos = await leerArchivo();
-  const newId =
-    productos.length > 0
-      ? Math.max(...productos.map((p) => p.idProducto)) + 1
-      : 1;
-  const nuevoProducto = {
-    ...producto,
-    idProducto: newId,
-    fechaAlta: new Date().toISOString(),
-    operador: datos.operador || "sistema",
-  };
-  productos.push(nuevoProducto);
-  await escribirArchivo(productos);
-  return nuevoProducto;
-};
+const MaestroProducto = mongoose.model(
+  "MaestroProducto",
+  maestroProductoSchema,
+);
 
-const leerArchivo = async () => {
-  const data = await fs.readFile(
-    path.join(filePath, "../../data/MaestroProductos.json"),
-    "utf-8",
-  );
-  return JSON.parse(data);
-};
-
-const escribirArchivo = async (data) => {
-  await fs.writeFile(filePath, JSON.stringify(data, null, 2));
-};
-
-function filtrarPorCategoria(productos, categoriaBuscada) {
-  return productos.filter((producto) =>
-    producto.categorias.some(
-      (cat) => cat.toLowerCase() === categoriaBuscada.toLowerCase(),
-    ),
-  );
-}
-function filtrarPorMultiplesCategoriasOR(productos, categoriasBuscadas) {
-  return productos.filter((producto) =>
-    categoriasBuscadas.some((catBuscada) =>
-      producto.categorias.some(
-        (catProd) => catProd.toLowerCase() === catBuscada.toLowerCase(),
-      ),
-    ),
-  );
-}
-
-function filtrarPorMultiplesCategoriasAND(productos, categoriasRequeridas) {
-  return productos.filter((producto) =>
-    categoriasRequeridas.every((catRequerida) =>
-      producto.categorias.some(
-        (catProd) => catProd.toLowerCase() === catRequerida.toLowerCase(),
-      ),
-    ),
-  );
-}
-
-export default {
-  obtenerTodos,
-  obtenerPorId,
-  guardar,
-  actualizar,
-  eliminar,
-  getAllProductos,
-  getProductoById,
-  getProductoByNombre,
-  createProducto,
-};
+export default MaestroProducto;
