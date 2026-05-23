@@ -69,7 +69,6 @@ const getAllProductos = async (categoria) => {
     return productos;
   } catch (error) {
     console.error(error);
-  } finally {
   }
 };
 

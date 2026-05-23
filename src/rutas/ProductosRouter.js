@@ -1,4 +1,3 @@
-// src/rutas/ProductosRouter.js
 import { Router } from "express";
 
 const router = Router();
@@ -10,7 +9,6 @@ import {
   getAllProductos,
   getAllProductosByCategoria,
   getAllProductosByNombre,
-  getAllProductosWithStock,
   getProductoById,
   getProductoByNombre,
   updateProductoWithPrecio,
@@ -25,7 +23,6 @@ router.get("/nombres/:nombre", getAllProductosByNombre);
 router.get("/categoria/:categoria", getAllProductosByCategoria);
 
 // Rutas de productos Privadas
-router.get("/stock", getAllProductosWithStock);
 router.post("/", createProducto);
 
 // Privada y Admin

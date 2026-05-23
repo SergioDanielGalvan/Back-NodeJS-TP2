@@ -1,8 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
 
-// let products = [];
-
 const __dirname = import.meta.dirname;
 
 export const getAllProductos = async (req, res) => {
@@ -31,7 +29,6 @@ export const getAllProductos = async (req, res) => {
   } catch (error) {
     console.error("Error al obtener todos los productos", error);
     throw error;
-  } finally {
   }
 };
 
@@ -48,7 +45,6 @@ export const getProductoById = async (id) => {
     return producto;
   } catch (error) {
     console.error(error);
-  } finally {
   }
 };
 
@@ -65,7 +61,6 @@ export const getProductoByIdProducto = async (idProducto) => {
     return producto;
   } catch (error) {
     console.error(error);
-  } finally {
   }
 };
 
@@ -99,7 +94,6 @@ export const getAllProductoByNombre = async (nombre) => {
     return productosFiltrados;
   } catch (error) {
     console.error(error);
-  } finally {
   }
 };
 
@@ -117,7 +111,6 @@ export const getProductoByNombre = async (nombre) => {
     return producto;
   } catch (error) {
     console.error(error);
-  } finally {
   }
 };
 
@@ -153,6 +146,8 @@ export const createProducto = async (nombre, precio, categorias, stock) => {
   }
   const idProducto = productoMaestro.id;
 
+  let producto = {};
+
   // Busco un id único para el nuevo producto
   try {
     const data = await fs.readFile(
@@ -163,18 +158,16 @@ export const createProducto = async (nombre, precio, categorias, stock) => {
     const ids = productos.map((producto) => producto.idLote);
     const maxId = Math.max(...ids);
     const newId = maxId + 1;
+
+    producto = {
+      id: newId,
+      idProducto: idProducto,
+      precio: precio,
+      stock: stock,
+    };
   } catch (error) {
     console.error(error);
-  } finally {
-    newId = newId ? newId : 1; // Si no hay productos, el primer ID será 1
   }
-
-  const product = {
-    id: newId,
-    idProducto: idProducto,
-    precio: precio,
-    stock: stock,
-  };
 
   try {
     const data = await fs.readFile(
@@ -191,10 +184,9 @@ export const createProducto = async (nombre, precio, categorias, stock) => {
       "utf-8",
     );
 
-    return product;
+    return producto;
   } catch (error) {
     console.error(error);
-  } finally {
   }
 };
 
@@ -219,7 +211,6 @@ export const deleteProductoById = async (id) => {
   } catch (error) {
     console.error("Error al eliminar producto", error);
     throw error;
-  } finally {
   }
 };
 
@@ -252,7 +243,6 @@ export const getAllProductosWithStock = async (req, res) => {
   } catch (error) {
     console.error("Error al obtener productos con stock", error);
     throw error;
-  } finally {
   }
 };
 
@@ -277,7 +267,6 @@ export const updateProductoWithStock = async (id, nuevoStock) => {
   } catch (error) {
     console.error("Error al actualizar stock del producto", error);
     throw error;
-  } finally {
   }
 };
 
@@ -302,7 +291,6 @@ export const updateProductoWithPrecio = async (id, nuevoPrecio) => {
   } catch (error) {
     console.error("Error al actualizar precio del producto", error);
     throw error;
-  } finally {
   }
 };
 
@@ -336,7 +324,6 @@ export const getAllProductosByCategoria = async (req, res) => {
   } catch (error) {
     console.error("Error al obtener productos por categoría", error);
     throw error;
-  } finally {
   }
 };
 

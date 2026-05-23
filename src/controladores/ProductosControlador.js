@@ -1,17 +1,14 @@
-import * as modelProductos from "../modelos/Productos.js";
-//import * as modelMaestro from "../modelos/MaestroProductos.js";
 import modelMaestro from "../modelos/MaestroProductos.js";
+import * as modelProductos from "../modelos/Productos.js";
 
 export const getAllProductos = async (req, res) => {
   try {
     const productosMaestro = await modelMaestro.getAllProductos("");
-    //const productosMaestro = await modelMaestro.obtenerTodos();
     if (!productosMaestro) {
       return res
         .status(404)
         .json({ error: "Productos en Maestro no encontrados" });
     }
-    // Datos de stock para cada producto
     const productosConStock = await modelProductos.getAllProductos("", false);
     if (!productosConStock) {
       return res
@@ -49,7 +46,6 @@ export const getAllProductosByCategoria = async (req, res) => {
         .status(404)
         .json({ error: "Productos en Maestro no encontrados" });
     }
-    // Datos de stock para cada producto
     const productosConStock = await modelProductos.getAllProductos(
       categoria,
       false,
@@ -166,7 +162,6 @@ export const createProducto = async (req, res) => {
   }
 };
 
-// RENOMBRADO: De deleteProducto a deleteProductoById para que coincida con el Router
 export const deleteProductoById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -177,7 +172,6 @@ export const deleteProductoById = async (req, res) => {
     res.status(200).json({ message: "Producto eliminado correctamente" });
   } catch (error) {
     res.status(500).json({ error: "Error del servidor" });
-  } finally {
   }
 };
 
@@ -221,7 +215,6 @@ export const crearRegistroCompra = async (req, res) => {
   try {
     const { idProducto, precioCompra, cantidad, fechaVencimiento } = req.body;
 
-    // Validaciones mínimas
     if (!idProducto || !precioCompra || !cantidad) {
       return res
         .status(400)
@@ -243,5 +236,3 @@ export const crearRegistroCompra = async (req, res) => {
     res.status(500).json({ error: "Error al procesar la compra" });
   }
 };
-
-export const getAllProductosWithStock = getAllProductos;
