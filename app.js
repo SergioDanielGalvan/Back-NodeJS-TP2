@@ -12,7 +12,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-//app.use(cors());
 
 // Configuración de Pug
 app.set("view engine", "pug");
@@ -39,7 +38,7 @@ app.get("/", (req, res) => {
 app.use("/api/usuarios", usersRouter);
 app.use("/api/productos", productosRouter);
 app.use("/api/maestroproductos", maestroProductosRouter);
-app.use("/maestroProductosRouterViews", maestroProductosRouterViews);
+app.use("/maestroproductos", maestroProductosRouterViews);
 
 // Manejo de errores 404
 app.use((req, res) => {

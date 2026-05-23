@@ -1,6 +1,5 @@
 import fs from "fs/promises";
 import path from "path";
-//import { getProductoByNombre } from "./Productos";
 
 const __dirname = import.meta.dirname;
 const filePath = path.join(__dirname, "../data/MaestroProductos.json");
@@ -55,8 +54,6 @@ const eliminar = async (id) => {
   return true;
 };
 
-// Definiciones Nuevas
-
 const getAllProductos = async (categoria) => {
   try {
     const productos = await leerArchivo(); // ya lee MaestroProductos.json
@@ -83,7 +80,6 @@ const getProductoById = async (id) => {
 
 const getProductoByNombre = async (nombre) => {
   const productos = await leerArchivo();
-  //return productos.find((p) => p.nombre === nombre);
   return productos.find((p) => p.nombre.includes(nombre));
 };
 
@@ -94,7 +90,7 @@ const createProducto = async (producto) => {
       ? Math.max(...productos.map((p) => p.idProducto)) + 1
       : 1;
   const nuevoProducto = {
-    ...producto, // Copia las propiedades del producto recibido, deconstruyo
+    ...producto,
     idProducto: newId,
     fechaAlta: new Date().toISOString(),
     operador: datos.operador || "sistema",
@@ -105,7 +101,6 @@ const createProducto = async (producto) => {
 };
 
 const leerArchivo = async () => {
-  //const data = await fs.readFile(filePath, "utf-8");
   const data = await fs.readFile(
     path.join(filePath, "../../data/MaestroProductos.json"),
     "utf-8",
@@ -125,7 +120,6 @@ function filtrarPorCategoria(productos, categoriaBuscada) {
   );
 }
 function filtrarPorMultiplesCategoriasOR(productos, categoriasBuscadas) {
-  // categoriasBuscadas es un array, ej: ["Tecnología", "Audio"]
   return productos.filter((producto) =>
     categoriasBuscadas.some((catBuscada) =>
       producto.categorias.some(
