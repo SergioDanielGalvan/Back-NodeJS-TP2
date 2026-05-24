@@ -29,8 +29,6 @@ async function verificarBaseDeDatos( BaseDeDatos ) {
         } else {
             console.log("La base de datos no existe (se creará al insertar el primer dato).");
         }
-
-
         bOk = true;
     } catch (error) {
         console.error("Error al verificar la base de datos:", error);
