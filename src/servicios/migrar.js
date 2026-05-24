@@ -23,6 +23,13 @@ export const migrar = async () => {
   await Lote.insertMany(lotesData);
   console.log("Lotes migrados");
 
+  // Migrar Usuarios (Usuarios.json)
+  const usuariosData = JSON.parse(
+    await fs.readFile(path.join(__dirname, "../data/Usuarios.json"), "utf-8")
+  );
+  await Usuario.insertMany(usuariosData);
+  console.log("Usuarios migrados");
+
   process.exit();
 };
 

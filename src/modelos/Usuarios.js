@@ -26,6 +26,11 @@ const usuarioSchema = new mongoose.Schema(
       enum: ["admin", "operador"],
       default: "operador",
     },
+
+    intentos: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
