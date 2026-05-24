@@ -127,6 +127,10 @@ maestroProductoSchema.statics.getProductoByEAN = async function (ean) {
   }).lean();
 };
 
+maestroProductoSchema.statics.obtenerPorIdProducto = async function (idProducto) {
+  return await this.findOne({ idProducto }).lean();
+};
+
 const MaestroProducto = mongoose.model(
   "MaestroProducto",
   maestroProductoSchema,

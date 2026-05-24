@@ -36,7 +36,7 @@ const productoSchema = new mongoose.Schema(
 // Auto-increment para idLote (opcional, ver explicación)
 productoSchema.pre("save", async function (next) {
   if (this.isNew && !this.idLote) {
-    const lastLote = await mongoose.model("Lote").findOne().sort({ idLote: -1 });
+    const lastLote = await mongoose.model("Producto").findOne().sort({ idLote: -1 });
     this.idLote = lastLote ? lastLote.idLote + 1 : 1;
   }
   next();
@@ -61,7 +61,7 @@ productoSchema.statics.crearProducto = async function (dataProducto) {
 
 productoSchema.statics.actualizarStock = async function (id, nuevoStock) {
   return await this.findOneAndUpdate(
-    { id },
+    { idLote: id },
     { stock: nuevoStock },
     { new: true }
   ).lean();
