@@ -1,0 +1,11 @@
+[ 
+    {
+    "idUsuario": 1,
+    "nombre": "Don Roberto",
+    "email": "roberto@todostocksrl.com",
+    "password": "password123",
+    "rol": "Cannot find name 'mongoose'.",
+    "NroIntentos": 0,
+    "fechaAlta": "2024-06-01T00:00:00.000Z"
+    }
+]
