@@ -1,0 +1,8 @@
+[ { "id": 1, "proveedor": "Proveedor A", "fecha": "2023-01-01", "total": 1000 },
+  { "id": 2, "proveedor": "Proveedor B", "fecha": "2023-02-01", "total": 2000 },
+  { "id": 3, "proveedor": "Proveedor C", "fecha": "2023-03-01", "total": 1500 },
+  { "id": 4, "proveedor": "Proveedor D", "fecha": "2023-04-01", "total": 3000 },
+  { "id": 5, "proveedor": "Proveedor E", "fecha": "2023-05-01", "total": 2500 },
+  { "id": null, "proveedor": null, "fecha": null, "total": null },
+  { "id": null, "proveedor": null, "fecha": null, "total": null },
+  { "id": null, "proveedor": null, "fecha": null, "total": null } ]
