@@ -374,3 +374,16 @@ export const registrarCompraLote = async (dataCompra) => {
   }
 };
 
+export const obtenerSaldoLote = async () => {
+  try {
+    const data = await fs.readFile(
+      path.join(__dirname, "../data/Productos.json"),
+      "utf-8",
+    );
+    return JSON.parse(data);
+  } catch (error) {
+    console.error("Error al leer el archivo:", error);
+    throw error;
+  }
+  finally {  }
+};
