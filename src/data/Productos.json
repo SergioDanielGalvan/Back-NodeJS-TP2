@@ -33,6 +33,16 @@
     "precio": 4160,
     "stock": 420,
     "FechaVencimiento": "2027-02-15"
+  },
+  {},
+  {
+    "id": null,
+    "precio": 4160,
+    "stock": 420
+  },
+  {
+    "id": null,
+    "precio": 4160,
+    "stock": 420
   }
-
 ]

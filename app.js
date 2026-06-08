@@ -1,46 +1,54 @@
 // app.js
-import express from 'express';
-// import cors from 'cors';
+import express from "express";
 import methodOverride from "method-override";
-import path from 'path';
-import { fileURLToPath } from 'url';
-import productosRouter from "./src/rutas/ProductosRouter.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import { connectDB } from "./src/config/mongodb.js";
 import maestroProductosRouter from "./src/rutas/MaestroProductosRouter.js";
 import maestroProductosRouterViews from "./src/rutas/MaestroProductosRouterViews.js";
+import productosRouter from "./src/rutas/ProductosRouter.js";
+import usersRouter from "./src/rutas/UsuariosRouter.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-//app.use(cors());
 
 // Configuración de Pug
-app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'src/vistas'));
+app.set("view engine", "pug");
+app.set("views", path.join(__dirname, "src/vistas"));
 
 // Archivos estáticos
-app.use('/imagenes', express.static(path.join(__dirname, 'src/vistas/imagenes')));
-app.use(express.static(path.join(__dirname, 'src/vistas')));
+app.use(
+  "/imagenes",
+  express.static(path.join(__dirname, "src/vistas/imagenes")),
+);
+app.use(express.static(path.join(__dirname, "src/vistas")));
 
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-//app.use(express.static('public'));
-//app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, "src")));
+app.use(methodOverride("_method"));
 
-// Rutas (se irán agregando)
-app.get('/', (req, res) => {
-  res.render('index', { titulo: 'TodoStock S.A.' });
+// Rutas
+app.get("/", (req, res) => {
+  res.render("index", { titulo: "TodoStock S.A." });
 });
 
+app.use("/api/usuarios", usersRouter);
 app.use("/api/productos", productosRouter);
 app.use("/api/maestroproductos", maestroProductosRouter);
-app.use("/maestroProductosRouterViews", maestroProductosRouterViews);
+app.use("/maestroproductos", maestroProductosRouterViews);
 
 // Manejo de errores 404
 app.use((req, res) => {
-  res.status(404).render('404', { titulo: 'Página no encontrada' });
+  res.status(404).render("404", { titulo: "Página no encontrada" });
 });
 
+connectDB();
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Servidor corriendo en http://localhost:${PORT}`),
+);
