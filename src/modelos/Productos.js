@@ -79,21 +79,36 @@ productoSchema.statics.eliminarPorIdLote = async function (idLote) {
   return await this.findOneAndDelete({ idLote });
 };
 
-<<<<<<< HEAD
-export const obtenerSaldoLote = async () => {
+export const obtenerSaldoLote = async function ( idLote ) {
   try {
-    const data = await fs.readFile(
+    // Primero ubico el producto por su idLote
+    //const producto = await mongoose.model("Producto").findOne({ idLote }).lean();
+    let saldo = 0;
+    let data = await fs.readFile(
       path.join(__dirname, "../data/Productos.json"),
       "utf-8",
     );
-    return JSON.parse(data);
+    const productos = JSON.parse(data);
+    const producto = productos.find(p => p.idLote === idLote);
+    if (!producto) {
+      throw new Error(`Producto con idLote ${idLote} no encontrado`);
+    }
+    saldo = producto.stock;
+    let data = await fs.readFile(
+      path.join(__dirname, "../data/DetalleVentas.json"),
+      "utf-8",  
+    );
+
+
   } catch (error) {
     console.error("Error al leer el archivo:", error);
     throw error;
   }
-  finally {  }
+  finally {
+  }
+  return { idLote, saldo };
 };
-=======
+
 const Producto = mongoose.model("Producto", productoSchema);
+
 export default Producto;
->>>>>>> 960508aa0a9269aa6c15050f78b59a9917cc32fb

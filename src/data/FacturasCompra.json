@@ -3,6 +3,6 @@
   { "id": 3, "proveedor": "Proveedor C", "fecha": "2023-03-01", "total": 1500 },
   { "id": 4, "proveedor": "Proveedor D", "fecha": "2023-04-01", "total": 3000 },
   { "id": 5, "proveedor": "Proveedor E", "fecha": "2023-05-01", "total": 2500 },
-  { "id": null, "proveedor": null, "fecha": null, "total": null },
-  { "id": null, "proveedor": null, "fecha": null, "total": null },
-  { "id": null, "proveedor": null, "fecha": null, "total": null } ]
+  { "id": 6, "proveedor": "Proveedor F", "fecha": "2023-06-01", "total": 2000 },
+  { "id": 7, "proveedor": "Proveedor G", "fecha": "2023-07-01", "total": 1500 },
+  { "id": 8, "proveedor": "Proveedor H", "fecha": "2023-08-01", "total": 3000 } ]

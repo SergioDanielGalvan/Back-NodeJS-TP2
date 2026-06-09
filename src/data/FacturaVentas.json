@@ -1,0 +1,13 @@
+[{
+    "id": 1,
+    "cliente": "Cliente A",
+    "fecha": "2023-01-01",
+    "total": 1000
+    },
+    {
+    "id": 2,
+    "cliente": "Cliente B",
+    "fecha": "2023-02-01",
+    "total": 2000
+     
+}]

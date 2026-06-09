@@ -1,0 +1,28 @@
+[{
+    "id": 1,
+    "idVenta": 1,
+    "idProducto": 1,
+    "cantidad": 10,
+    "precioUnitario": 100
+    },
+    {
+    "id": 2,
+    "idVenta": 1,
+    "idProducto": 2,
+    "cantidad": 5,
+    "precioUnitario": 200
+    },
+    {
+    "id": 3,
+    "idVenta": 2,
+    "idProducto": 1,
+    "cantidad": 20,
+    "precioUnitario": 100
+    },
+    {
+    "id": 4,
+    "idVenta": 2,
+    "idProducto": 3,
+    "cantidad": 15,
+    "precioUnitario": 150    
+}]
