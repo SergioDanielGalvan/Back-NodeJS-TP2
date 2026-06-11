@@ -11,6 +11,17 @@
     "puntoPedido": 120
   },
   {
+    "idProducto": 2,
+    "nombre": "Lavandina Ayudín Original 2 Litros",
+    "categorias": [
+      "Lavandinas",
+      "Lavandinas líquidas"
+    ],
+    "EAN": "7793253006709",
+    "stockminimo": 200,
+    "puntoPedido": 240
+  },
+  {
     "idProducto": 3,
     "nombre": "Lavandina En Gel Original Odex Bot 700 Ml",
     "categorias": [
@@ -23,13 +34,13 @@
   },
   {
     "idProducto": 4,
-    "nombre": "Detergente Magistral Platinum Limón Amarillo",
+    "nombre": "Detergente Magistral Platinum Limón Amarillo 500ml",
     "categorias": [
       "Cocina",
       "Detergentes"
     ],
     "EAN": "7790990003398",
-    "stockminimo": 50,
+    "stockminimo": 60,
     "puntoPedido": 70
   },
   {
@@ -64,5 +75,17 @@
     "EAN": "7791290793354",
     "stockminimo": 100,
     "puntoPedido": 120
+  },
+  {
+    "idProducto": 8,
+    "nombre": "Limpiador Líquido Para Pisos Procenex Lavanda 5l",
+    "categorias": [
+      "Pisos y Superficies",
+      "Detergentes"
+    ],
+    "EAN": "7791130683869",
+    "stockminimo": 40,
+    "puntoPedido": 45
   }
+
 ]

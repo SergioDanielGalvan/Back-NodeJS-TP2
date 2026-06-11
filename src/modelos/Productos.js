@@ -98,7 +98,10 @@ export const obtenerSaldoLote = async function ( idLote ) {
       path.join(__dirname, "../data/DetalleVentas.json"),
       "utf-8",  
     );
-
+    const detalleVentas = JSON.parse(data);
+    const ventasProducto = detalleVentas.filter(dv => dv.idLote === idLote);
+    const totalVendidos = ventasProducto.reduce((total, venta) => total + venta.cantidad, 0);
+    saldo -= totalVendidos;
 
   } catch (error) {
     console.error("Error al leer el archivo:", error);

@@ -1,0 +1,110 @@
+[   
+    {
+    "idDetalleCompra": 1,
+    "idFacturaCompra": 1,
+    "idProducto": 1,
+    "cantidad": 50,
+    "unidadmedida": "04",
+    "fechaIngresoStock": "2026-03-05",
+    "total": 160000
+    },
+    {
+    "idDetalleCompra": 2,
+    "idFacturaCompra": 1,
+    "idProducto": 2,
+    "cantidad": 150,
+    "unidadmedida": "04",
+    "fechaIngresoStock": "2026-03-05",
+    "total": 240000
+    },
+    {
+    "idDetalleCompra": 3,
+    "idFacturaCompra": 1,
+    "idProducto": 3,
+    "cantidad": 120,
+    "unidadmedida": "04",
+    "fechaIngresoStock": "2026-03-05",
+    "total": 399000
+    },
+    {
+    "idDetalleCompra": 4,
+    "idFacturaCompra": 2,
+    "idProducto": 4,
+    "cantidad": 410,
+    "unidadmedida": "04",
+    "fechaIngresoStock": "2026-03-15",
+    "total": 1787000
+    },
+    {
+    "idDetalleCompra": 5,
+    "idFacturaCompra": 2,
+    "idProducto": 5,
+    "cantidad": 120,
+    "unidadmedida": "04",
+    "fechaIngresoStock": "2026-03-15",
+    "total": 415200
+    },
+    {
+    "idDetalleCompra": 6,
+    "idFacturaCompra": 3,
+    "idProducto": 7,
+    "cantidad": 120,
+    "unidadmedida": "04",
+    "fechaIngresoStock": "2026-04-01",
+    "total": 804000
+    },
+    {
+    "idDetalleCompra": 7,
+    "idFacturaCompra": 3,
+    "idProducto": 4,
+    "cantidad": 230,
+    "unidadmedida": "04",
+    "fechaIngresoStock": "2026-04-01",
+    "total": 998200
+    },
+    {
+    "idDetalleCompra": 8,
+    "idFacturaCompra": 4,
+    "idProducto": 5,
+    "cantidad": 230,
+    "unidadmedida": "04",
+    "fechaIngresoStock": "2026-04-21",
+    "total": 745800
+    },
+    {
+    "idDetalleCompra": 9,
+    "idFacturaCompra": 4,
+    "idProducto": 7,
+    "cantidad": 230,
+    "unidadmedida": "04",
+    "fechaIngresoStock": "2026-04-21",
+    "total": 802800
+    },
+    {
+    "idDetalleCompra": 10,
+    "idFacturaCompra": 5,
+    "idProducto": 1,
+    "cantidad": 300,
+    "unidadmedida": "04",
+    "fechaIngresoStock": "2026-05-17",
+    "total": 930000
+    },
+    {
+    "idDetalleCompra": 11,
+    "idFacturaCompra": 5,
+    "idProducto": 3,
+    "cantidad": 140,
+    "unidadmedida": "04",
+    "fechaIngresoStock": "2026-05-17",
+    "total": 929600
+    },
+    {
+    "idDetalleCompra": 12,
+    "idFacturaCompra": 5,
+    "idProducto": 6,
+    "cantidad": 190,
+    "unidadmedida": "04",
+    "fechaIngresoStock": "2026-05-17",
+    "total": 1007000
+    }
+]

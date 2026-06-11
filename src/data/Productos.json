@@ -2,47 +2,122 @@
   {
     "idLote": 1,
     "idProducto": 1,
-    "precio": 5500,
-    "stock": 300,
+    "idFacturaCompra": 1,
+    "idDetalleCompra": 1,
+    "precio": 3200,
+    "stock": 50,
+    "fechaIngresoStock": "2026-03-05",
     "FechaVencimiento": "2026-12-31"
   },
   {
     "idLote": 2,
     "idProducto": 2,
-    "precio": 63500,
-    "stock": 230,
+    "idFacturaCompra": 1,
+    "idDetalleCompra": 2,
+    "precio": 1600,
+    "stock": 150,
+    "fechaIngresoStock": "2026-03-05",
     "FechaVencimiento": "2026-12-31"
   },
   {
     "idLote": 3,
     "idProducto": 3,
-    "precio": 2700,
-    "stock": 130,
+    "idFacturaCompra": 1,
+    "idDetalleCompra": 3,
+    "precio": 3325,
+    "stock": 120,
+    "fechaIngresoStock": "2026-03-05",
     "FechaVencimiento": "2026-09-15"
   },
   {
-    "idLote": 5,
+    "idLote": 4,
     "idProducto": 4,
-    "precio": 3460,
-    "stock": 220,
+    "idFacturaCompra": 2,
+    "idDetalleCompra": 4,
+    "precio": 4360,
+    "stock": 410,
+    "fechaIngresoStock": "2026-03-15",
     "FechaVencimiento": "2027-01-10"
   },
   {
-    "idLote": 4,
-    "idProducto": 6,
-    "precio": 4160,
-    "stock": 420,
+    "idLote": 5,
+    "idProducto": 5,
+    "idFacturaCompra": 2,
+    "idDetalleCompra": 5,
+    "precio": 3460,
+    "stock": 120,
+    "fechaIngresoStock": "2026-03-15",
+    "FechaVencimiento": "2027-01-10"
+  },
+  {
+    "idLote": 6,
+    "idProducto": 7,
+    "idFacturaCompra": 3,
+    "idDetalleCompra": 6,
+    "precio": 6700,
+    "stock": 120,
+    "fechaIngresoStock": "2026-03-05",
     "FechaVencimiento": "2027-02-15"
   },
-  {},
-  {
-    "id": null,
-    "precio": 4160,
-    "stock": 420
+    {
+    "idLote": 7,
+    "idProducto": 4,
+    "idFacturaCompra": 3,
+    "idDetalleCompra": 7,
+    "precio": 4340,
+    "stock": 230,
+    "fechaIngresoStock": "2026-03-05",
+    "FechaVencimiento": "2027-02-15"
   },
   {
-    "id": null,
-    "precio": 4160,
-    "stock": 420
+    "idLote": 8,
+    "idProducto": 5,
+    "idFacturaCompra": 4,
+    "idDetalleCompra": 8,
+    "precio": 3390,
+    "stock": 220,
+    "fechaIngresoStock": "2026-04-21",
+    "FechaVencimiento": "2027-01-10"
+  },
+  {
+    "idLote": 9,
+    "idProducto": 7,
+    "idFacturaCompra": 4,
+    "idDetalleCompra": 9,
+    "precio": 4460,
+    "stock": 180,
+    "fechaIngresoStock": "2026-04-21",
+    "FechaVencimiento": "2027-01-10"
+  },
+  {
+    "idLote": 10,
+    "idProducto": 1,
+    "idFacturaCompra": 5,
+    "idDetalleCompra": 10,
+    "precio": 3100,
+    "stock": 300,
+    "fechaIngresoStock": "2026-05-17",
+    "FechaVencimiento": "2027-01-10"
+  },
+  {
+    "idLote": 11,
+    "idProducto": 3,
+    "idFacturaCompra": 5,
+    "idDetalleCompra": 11,
+    "precio": 6640,
+    "stock": 140,
+    "fechaIngresoStock": "2026-05-17",
+    "FechaVencimiento": "2027-01-10"
+  },
+  {
+    "idLote": 12,
+    "idProducto": 6,
+    "idFacturaCompra": 5,
+    "idDetalleCompra": 12,
+    "precio": 5300,
+    "stock": 190,
+    "fechaIngresoStock": "2026-05-17",
+    "FechaVencimiento": "2027-01-10"
   }
+
 ]

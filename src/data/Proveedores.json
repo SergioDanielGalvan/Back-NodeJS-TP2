@@ -1,2 +1,12 @@
-[ { "id": 1, "nombre": "Proveedor A", "contacto": "contacto@proveedora.com" },
- { "id": 2, "nombre": "Proveedor B", "contacto": "contacto@proveedorb.com" } ]
+[ { "idProveedor": 1,
+    "nombre": "Proveedor A",
+    "nroCUIT" : "27-32345678-9",
+    "situacionIVA": "I",
+    "contacto": "contacto@proveedora.com"
+  },
+  { "idProveedor": 2,
+    "nombre": "Proveedor B",
+    "nroCUIT" : "30-32345678-9",
+    "situacionIVA": "I",
+    "contacto": "contacto@proveedorb.com" }
+]

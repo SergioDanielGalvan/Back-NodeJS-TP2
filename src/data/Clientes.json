@@ -1,0 +1,9 @@
+[{
+    "idCliente": 1,
+    "nombre": "Cliente A",
+    "nroCUIT" : "20-12345678-9",
+    "situacionIVA": "M",
+    "email": "",
+    "fecha": "2023-01-01"
+
+}]

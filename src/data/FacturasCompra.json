@@ -1,8 +1,57 @@
-[ { "id": 1, "proveedor": "Proveedor A", "fecha": "2023-01-01", "total": 1000 },
-  { "id": 2, "proveedor": "Proveedor B", "fecha": "2023-02-01", "total": 2000 },
-  { "id": 3, "proveedor": "Proveedor C", "fecha": "2023-03-01", "total": 1500 },
-  { "id": 4, "proveedor": "Proveedor D", "fecha": "2023-04-01", "total": 3000 },
-  { "id": 5, "proveedor": "Proveedor E", "fecha": "2023-05-01", "total": 2500 },
-  { "id": 6, "proveedor": "Proveedor F", "fecha": "2023-06-01", "total": 2000 },
-  { "id": 7, "proveedor": "Proveedor G", "fecha": "2023-07-01", "total": 1500 },
-  { "id": 8, "proveedor": "Proveedor H", "fecha": "2023-08-01", "total": 3000 } ]
+[ { "idFacturaCompra": 1,
+    "idProveedor": 1,
+    "nroFactura": "0001-00012303",
+    "fechaFactura": "2026-03-01",
+    "montoTotal": 799000
+  },
+  { "idFacturaCompra": 2,
+    "idProveedor": 2,
+    "nroFactura": "0003-00124908",
+    "fechaFactura": "2026-03-11",
+    "montoTotal": 2202800
+  },
+  { "idFacturaCompra": 3,
+    "idProveedor": 3,
+    "nroFactura": "0001-00008343",
+    "fechaFactura": "2026-03-31",
+    "fechaIngresoStock": "2026-04-01",
+    "montoTotal": 1802200
+  },
+
+  { "idFacturaCompra": 4,
+    "idProveedor": 4,
+    "nroFactura": "0002-00009753",
+    "fechaFactura": "2026-04-10",
+    "fechaIngresoStock": "2026-04-12",
+    "montoTotal": 154860
+  },
+  { "idFacturaCompra": 5,
+    "idProveedor": 3,
+    "nroFactura": "0001-00008399",
+    "fechaFactura": "2026-05-14",
+    "fechaIngresoStock": "2026-05-16",
+    "montoTotal": 2866600
+  },
+
+  { "idFacturaCompra": 6,
+    "idProveedor": 1,
+    "nroFactura": "0001-00124912",
+    "fechaFactura": "2026-05-18",
+    "fechaIngresoStock": "2026-05-20",
+    "montoTotal": 2000
+  },
+  { "idFacturaCompra": 7,
+    "idProveedor": 5,
+    "nroFactura": "005-00664911",
+    "fechaFactura": "2026-06-03",
+    "fechaIngresoStock": "2026-06-05",
+    "montoTotal": 1500
+  },
+  { "idFacturaCompra": 8,
+    "idProveedor": 2,
+    "nroFactura": "0003-00125048",
+    "fechaFactura": "2026-06-11",
+    "fechaIngresoStock": "2026-06-13",
+    "montoTotal": 3000
+    }
+]
