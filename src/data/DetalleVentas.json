@@ -1,28 +1,74 @@
-[{
-    "id": 1,
-    "idVenta": 1,
+[
+    {
+    "idDetalleVenta": 1,
+    "idFacturaCompra": 1,
+    "idLote": 1,
     "idProducto": 1,
     "cantidad": 10,
-    "precioUnitario": 100
+    "precioUnitario": 3750,
+    "montoTotal": 37500
     },
     {
-    "id": 2,
-    "idVenta": 1,
+    "idDetalleVenta": 2,
+    "idFacturaCompra": 1,
+    "idLote": 2,
     "idProducto": 2,
     "cantidad": 5,
-    "precioUnitario": 200
+    "precioUnitario": 1860,
+    "montoTotal": 9300
     },
     {
-    "id": 3,
-    "idVenta": 2,
-    "idProducto": 1,
+    "idDetalleVenta": 3,
+    "idFacturaCompra": 1,
+    "idLote": 5,
+    "idProducto": 5,
     "cantidad": 20,
-    "precioUnitario": 100
+    "precioUnitario": 3660,
+    "montoTotal": 73200
     },
     {
-    "id": 4,
-    "idVenta": 2,
+    "idDetalleVenta": 4,
+    "idFacturaCompra": 2,
+    "idLote": 3,
     "idProducto": 3,
+    "cantidad": 38,
+    "precioUnitario": 3590,
+    "montoTotal": 136420
+    },
+    {
+    "idDetalleVenta": 5,
+    "idFacturaCompra": 2,
+    "idLote": 6,
+    "idProducto": 7,
     "cantidad": 15,
-    "precioUnitario": 150    
-}]
+    "precioUnitario": 7200,
+    "montoTotal": 108000
+    },
+    {
+    "idDetalleVenta": 6,
+    "idFacturaCompra": 2,
+    "idLote": 4,
+    "idProducto": 4,
+    "cantidad": 150,
+    "precioUnitario": 4590,
+    "montoTotal": 688500
+    },
+    {
+    "idDetalleVenta": 7,
+    "idFacturaCompra": 3,
+    "idLote": 5,
+    "idProducto": 5,
+    "cantidad": 335,
+    "precioUnitario": 3750,
+    "montoTotal": 56250
+    },
+    {
+    "idDetalleVenta": 8,
+    "idFacturaCompra": 3,
+    "idLote": 6,
+    "idProducto": 7,
+    "cantidad": 35,
+    "precioUnitario": 4850,
+    "montoTotal": 169750
+    }
+]

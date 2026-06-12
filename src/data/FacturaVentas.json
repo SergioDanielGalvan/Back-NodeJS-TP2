@@ -1,13 +1,29 @@
-[{
-    "id": 1,
-    "cliente": "Cliente A",
+[
+    {
+    "idFacturaCompra": 1,
+    "idProveedor": 1,
+    "nroFactura": "0002-00000123",
+    "fechaFactura": "2026-03-10",
+    "idCliente": 1,
     "fecha": "2023-01-01",
-    "total": 1000
+    "total": 120000
     },
     {
-    "id": 2,
-    "cliente": "Cliente B",
+    "idFacturaCompra": 2,
+    "idProveedor": 2,
+    "nroFactura": "0002-00000124",
+    "fechaFactura": "2026-03-12",
+    "idCliente": 2,
     "fecha": "2023-02-01",
-    "total": 2000
-     
-}]
+    "total": 932920
+    },
+    {
+    "idFacturaCompra": 3,
+    "idProveedor": 3,
+    "nroFactura": "0002-00000125",
+    "fechaFactura": "2026-03-15",
+    "idCliente": 3,
+    "fecha": "2023-03-01",
+    "total": 226000
+    }
+]
