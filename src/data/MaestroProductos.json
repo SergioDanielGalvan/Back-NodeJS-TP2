@@ -86,6 +86,17 @@
     "EAN": "7791130683869",
     "stockminimo": 40,
     "puntoPedido": 45
+  },
+  {
+    "idProducto": 9,
+    "nombre": "Limpia Vidrios Y Multiuso Cif 450ml",
+    "categorias": [
+      "Pisos y Superficies",
+      "Limpia Vidrios y Multiusos"
+    ],
+    "EAN": "7791290795624",
+    "stockminimo": 200,
+    "puntoPedido": 240
   }
 
 ]
