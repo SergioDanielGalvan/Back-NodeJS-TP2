@@ -8,5 +8,24 @@
     "nombre": "Proveedor B",
     "nroCUIT" : "30-32345678-9",
     "situacionIVA": "I",
-    "contacto": "contacto@proveedorb.com" }
+    "contacto": "contacto@proveedorb.com"
+  },
+  { "idProveedor": 3,
+    "nombre": "Proveedor C",
+    "nroCUIT" : "20-42345678-5",
+    "situacionIVA": "I",
+    "contacto": "contacto@proveedorc.com"
+   }  ,
+  { "idProveedor": 4,
+    "nombre": "Proveedor D",
+    "nroCUIT" : "23-52345678-1",
+    "situacionIVA": "I",
+    "contacto": "contacto@proveedord.com"
+  },
+  { "idProveedor": 5,
+    "nombre": "Proveedor E",
+    "nroCUIT" : "27-62345678-2",
+    "situacionIVA": "I",
+    "contacto": "contacto@proveedore.com"
+  }  
 ]

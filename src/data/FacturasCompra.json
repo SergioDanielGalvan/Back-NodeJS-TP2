@@ -23,7 +23,7 @@
     "nroFactura": "0002-00009753",
     "fechaFactura": "2026-04-10",
     "fechaIngresoStock": "2026-04-12",
-    "montoTotal": 154860
+    "montoTotal": 1805500
   },
   { "idFacturaCompra": 5,
     "idProveedor": 3,
@@ -31,27 +31,5 @@
     "fechaFactura": "2026-05-14",
     "fechaIngresoStock": "2026-05-16",
     "montoTotal": 2866600
-  },
-
-  { "idFacturaCompra": 6,
-    "idProveedor": 1,
-    "nroFactura": "0001-00124912",
-    "fechaFactura": "2026-05-18",
-    "fechaIngresoStock": "2026-05-20",
-    "montoTotal": 2000
-  },
-  { "idFacturaCompra": 7,
-    "idProveedor": 5,
-    "nroFactura": "005-00664911",
-    "fechaFactura": "2026-06-03",
-    "fechaIngresoStock": "2026-06-05",
-    "montoTotal": 1500
-  },
-  { "idFacturaCompra": 8,
-    "idProveedor": 2,
-    "nroFactura": "0003-00125048",
-    "fechaFactura": "2026-06-11",
-    "fechaIngresoStock": "2026-06-13",
-    "montoTotal": 3000
-    }
+  }
 ]

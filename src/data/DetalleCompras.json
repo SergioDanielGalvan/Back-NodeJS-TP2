@@ -33,7 +33,7 @@
     "cantidad": 410,
     "unidadmedida": "04",
     "fechaIngresoStock": "2026-03-15",
-    "total": 1787000
+    "total": 1787600
     },
     {
     "idDetalleCompra": 5,
@@ -69,7 +69,7 @@
     "cantidad": 230,
     "unidadmedida": "04",
     "fechaIngresoStock": "2026-04-21",
-    "total": 745800
+    "total": 779700
     },
     {
     "idDetalleCompra": 9,
@@ -78,7 +78,7 @@
     "cantidad": 230,
     "unidadmedida": "04",
     "fechaIngresoStock": "2026-04-21",
-    "total": 802800
+    "total": 1025800
     },
     {
     "idDetalleCompra": 10,

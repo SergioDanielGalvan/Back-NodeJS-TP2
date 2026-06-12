@@ -75,7 +75,7 @@
     "idFacturaCompra": 4,
     "idDetalleCompra": 8,
     "precio": 3390,
-    "stock": 220,
+    "stock": 230,
     "fechaIngresoStock": "2026-04-21",
     "FechaVencimiento": "2027-01-10"
   },
@@ -85,7 +85,7 @@
     "idFacturaCompra": 4,
     "idDetalleCompra": 9,
     "precio": 4460,
-    "stock": 180,
+    "stock": 230,
     "fechaIngresoStock": "2026-04-21",
     "FechaVencimiento": "2027-01-10"
   },
