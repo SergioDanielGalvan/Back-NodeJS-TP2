@@ -15,10 +15,7 @@
     "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-<<<<<<< HEAD
-=======
     "method-override": "^3.0.0",
->>>>>>> 960508aa0a9269aa6c15050f78b59a9917cc32fb
     "mongoose": "^9.6.2",
     "pug": "^3.0.4"
   }
