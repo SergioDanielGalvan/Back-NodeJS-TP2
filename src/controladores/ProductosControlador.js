@@ -1,6 +1,8 @@
 // controllers/ProductosControlador.js
 import MaestroProducto from "../modelos/MaestroProductos.js";
-import Producto from "../modelos/Productos.js";
+//import Producto from "../modelos/Productos.js";
+//import Producto, { getSaldoLote, getSaldoProducto } from "../modelos/Productos.js";
+import Producto, { getSaldoLote as getSaldoLoteModel, getSaldoProducto as getSaldoProductoModel } from "../modelos/Productos.js";
 
 // --------------------------------------------------------------
 // Obtener todos los productos (lotes) enriquecidos con datos del maestro
@@ -188,7 +190,7 @@ export const getAllProductosByNombre = async (req, res) => {
 export const getSaldoLote = async (req, res) => {
   try {
     const { idLote } = req.params;
-    const saldo = await modelProductos.getSaldoLote(idLote);
+    const saldo = await getSaldoLoteModel( idLote );
     res.status(200).json(saldo);
   } catch (error) {
     res.status(500).json({ error: "Error del servidor" });
@@ -201,7 +203,7 @@ export const getSaldoLote = async (req, res) => {
 export const getSaldoProducto = async (req, res) => {
   try {
     const { idProducto } = req.params;
-    const saldo = await modelProductos.getSaldoProducto(idProducto);
+    const saldo = await getSaldoProductoModel( idProducto );
     res.status(200).json(saldo);
   } catch (error) {
     res.status(500).json({ error: "Error del servidor" });
