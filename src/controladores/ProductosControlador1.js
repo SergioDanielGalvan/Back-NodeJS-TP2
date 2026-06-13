@@ -147,6 +147,26 @@ export const getAllProductosByNombre = async (req, res) => {
   }
 };
 
+export const getSaldoLote = async (req, res) => {
+  try {
+    const { idLote } = req.params;
+    const saldo = await modelProductos.getSaldoLote(idLote);
+    res.status(200).json(saldo);
+  } catch (error) {
+    res.status(500).json({ error: "Error del servidor" });
+  }
+};
+
+export const getSaldoProducto = async (req, res) => {
+  try {
+    const { idProducto } = req.params;
+    const saldo = await modelProductos.getSaldoProducto(idProducto);
+    res.status(200).json(saldo);
+  } catch (error) {
+    res.status(500).json({ error: "Error del servidor" });
+  }
+};
+
 export const createProducto = async (req, res) => {
   try {
     const { nombre, precio, categorias, stock } = req.body;
@@ -236,3 +256,5 @@ export const crearRegistroCompra = async (req, res) => {
     res.status(500).json({ error: "Error al procesar la compra" });
   }
 };
+
+export const eliminarProductoByIdLote = async (req, res) => {

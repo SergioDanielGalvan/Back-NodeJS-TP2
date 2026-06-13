@@ -69,7 +69,7 @@ productoSchema.statics.eliminarPorIdLote = async function (idLote) {
 };
 
 // ----- Funciones de saldo -----
-export const obtenerSaldoLote = async function (idLote) {
+export const getSaldoLote = async function ( idLote ) {
   try {
     const productosData = await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8");
     const productos = JSON.parse(productosData);
@@ -89,7 +89,7 @@ export const obtenerSaldoLote = async function (idLote) {
   }
 };
 
-export async function obtenerSaldo(idProducto) {
+export async function getSaldoProducto( idProducto ) {
   const productosData = await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8");
   const productos = JSON.parse(productosData);
   const lotesDelProducto = productos.filter(p => p.idProducto === idProducto);
@@ -97,13 +97,13 @@ export async function obtenerSaldo(idProducto) {
 
   let saldoTotal = 0;
   for (const lote of lotesDelProducto) {
-    const { saldo } = await obtenerSaldoLote(lote.idLote);
+    const { saldo } = await getSaldoLote(lote.idLote);
     saldoTotal += saldo;
   }
   return saldoTotal;
 }
 
-export async function obtenerProductosConBajoStockOptimizado() {
+export async function getProductosConBajoStockOptimizado() {
   const [maestro, productos, ventas] = await Promise.all([
     fs.readFile(path.join(DATA_PATH, "MaestroProductos.json"), "utf8").then(JSON.parse),
     fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8").then(JSON.parse),
@@ -132,14 +132,14 @@ export async function obtenerProductosConBajoStockOptimizado() {
     }));
 }
 
-export async function obtenerValorInventario(idProducto) {
+export async function getValorInventario(idProducto) {
   const productosData = await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8");
   const productos = JSON.parse(productosData);
   const lotesDelProducto = productos.filter(p => p.idProducto === idProducto);
 
   let valorTotal = 0;
   for (const lote of lotesDelProducto) {
-    const { saldo } = await obtenerSaldoLote(lote.idLote);
+    const { saldo } = await getSaldoLote(lote.idLote);
     valorTotal += lote.precio * saldo;
   }
   return valorTotal;

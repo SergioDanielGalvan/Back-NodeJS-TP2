@@ -11,6 +11,8 @@ import {
   getAllProductosByNombre,
   getProductoById,
   getProductoByNombre,
+  getSaldoLote,
+  getSaldoProducto,
   updateProductoWithPrecio,
   updateProductoWithStock,
 } from "../controladores/ProductosControlador.js";
@@ -21,6 +23,8 @@ router.get("/:id", getProductoById);
 router.get("/nombre/:nombre", getProductoByNombre);
 router.get("/nombres/:nombre", getAllProductosByNombre);
 router.get("/categoria/:categoria", getAllProductosByCategoria);
+router.get("/saldo/lote/:idLote", getSaldoLote);
+router.get("/saldo/producto/:idProducto", getSaldoProducto);
 
 // Rutas de productos Privadas
 router.post("/", createProducto);
