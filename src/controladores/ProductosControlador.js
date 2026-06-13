@@ -218,7 +218,7 @@ export const getSaldoProducto = async (req, res) => {
 };
 
 // --------------------------------------------------------------
-// Obtener el Resumen Total de Stockun Producto (producto en inventario)
+// Obtener el Resumen Total de Stock por Producto (producto en inventario)
 // --------------------------------------------------------------
 export const getResumenStockPorProducto = async (req, res) => {
   try {
@@ -239,11 +239,13 @@ export const getResumenStockPorProducto = async (req, res) => {
       if (!resumen[lote.idProducto]) {
         resumen[lote.idProducto] = {
           idProducto: lote.idProducto,
+          cantidad: 0,
           saldoTotal: 0,
           cantidadLotes: 0
         };
       }
       resumen[lote.idProducto].saldoTotal += saldoLote;
+      resumen[lote.idProducto].cantidad += lote.stock;
       resumen[lote.idProducto].cantidadLotes += 1;
     }
 
