@@ -3,6 +3,13 @@ import MaestroProducto from "../modelos/MaestroProductos.js";
 //import Producto from "../modelos/Productos.js";
 //import Producto, { getSaldoLote, getSaldoProducto } from "../modelos/Productos.js";
 import Producto, { getSaldoLote as getSaldoLoteModel, getSaldoProducto as getSaldoProductoModel } from "../modelos/Productos.js";
+import fs from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const DATA_PATH = path.join(__dirname, "../data");
 
 // --------------------------------------------------------------
 // Obtener todos los productos (lotes) enriquecidos con datos del maestro
@@ -207,6 +214,72 @@ export const getSaldoProducto = async (req, res) => {
     res.status(200).json(saldo);
   } catch (error) {
     res.status(500).json({ error: "Error del servidor" });
+  }
+};
+
+// --------------------------------------------------------------
+// Obtener el Resumen Total de Stockun Producto (producto en inventario)
+// --------------------------------------------------------------
+export const getResumenStockPorProducto = async (req, res) => {
+  try {
+    // Leer archivos JSON directamente (optimizado)
+    const productos = JSON.parse(await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8"));
+    const ventas = JSON.parse(await fs.readFile(path.join(DATA_PATH, "DetalleVentas.json"), "utf8"));
+
+    // Calcular ventas por lote
+    const ventasPorLote = {};
+    for (const v of ventas) {
+      ventasPorLote[v.idLote] = (ventasPorLote[v.idLote] || 0) + v.cantidad;
+    }
+
+    // Acumular por producto
+    const resumen = {};
+    for (const lote of productos) {
+      const saldoLote = lote.stock - (ventasPorLote[lote.idLote] || 0);
+      if (!resumen[lote.idProducto]) {
+        resumen[lote.idProducto] = {
+          idProducto: lote.idProducto,
+          saldoTotal: 0,
+          cantidadLotes: 0
+        };
+      }
+      resumen[lote.idProducto].saldoTotal += saldoLote;
+      resumen[lote.idProducto].cantidadLotes += 1;
+    }
+
+    // Convertir a array
+    const resultado = Object.values(resumen);
+    res.status(200).json(resultado);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// --------------------------------------------------------------
+// Detalle: saldo y vencimiento por lote
+// --------------------------------------------------------------
+export const getDetalleStockPorLote = async (req, res) => {
+  try {
+    const productos = JSON.parse(await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8"));
+    const ventas = JSON.parse(await fs.readFile(path.join(DATA_PATH, "DetalleVentas.json"), "utf8"));
+
+    const ventasPorLote = {};
+    for (const v of ventas) {
+      ventasPorLote[v.idLote] = (ventasPorLote[v.idLote] || 0) + v.cantidad;
+    }
+
+    const detalle = productos.map(lote => ({
+      idLote: lote.idLote,
+      idProducto: lote.idProducto,
+      saldo: lote.stock - (ventasPorLote[lote.idLote] || 0),
+      fechaVencimiento: lote.FechaVencimiento
+    }));
+
+    res.status(200).json(detalle);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
   }
 };
 
