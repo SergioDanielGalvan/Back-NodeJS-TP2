@@ -259,6 +259,43 @@ export const getResumenStockPorProducto = async (req, res) => {
 };
 
 // --------------------------------------------------------------
+// Detalle de lotes para un producto específico (saldo + vencimiento)
+// --------------------------------------------------------------
+export const getDetalleStockPorProducto = async (req, res) => {
+  try {
+    const { idProducto } = req.params;
+    const productoId = Number(idProducto);
+
+    const productos = JSON.parse(await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8"));
+    const ventas = JSON.parse(await fs.readFile(path.join(DATA_PATH, "DetalleVentas.json"), "utf8"));
+
+    // Ventas por lote
+    const ventasPorLote = {};
+    for (const v of ventas) {
+      ventasPorLote[v.idLote] = (ventasPorLote[v.idLote] || 0) + v.cantidad;
+    }
+
+    // Filtrar lotes del producto y calcular saldo
+    const lotesProducto = productos
+      .filter(lote => lote.idProducto === productoId)
+      .map(lote => ({
+        idLote: lote.idLote,
+        saldo: lote.stock - (ventasPorLote[lote.idLote] || 0),
+        fechaVencimiento: lote.FechaVencimiento
+      }));
+
+    if (lotesProducto.length === 0) {
+      return res.status(404).json({ error: `No se encontraron lotes para el producto ${productoId}` });
+    }
+
+    res.status(200).json(lotesProducto);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// --------------------------------------------------------------
 // Detalle: saldo y vencimiento por lote
 // --------------------------------------------------------------
 export const getDetalleStockPorLote = async (req, res) => {
@@ -279,6 +316,46 @@ export const getDetalleStockPorLote = async (req, res) => {
     }));
 
     res.status(200).json(detalle);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// --------------------------------------------------------------
+// Obtener lista de lotes de un producto con saldo y vencimiento
+// --------------------------------------------------------------
+export const getLotesPorProducto = async (req, res) => {
+  try {
+    const { idProducto } = req.params;
+    const id = parseInt(idProducto);
+
+    // Leer archivos
+    const productos = JSON.parse(await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8"));
+    const ventas = JSON.parse(await fs.readFile(path.join(DATA_PATH, "DetalleVentas.json"), "utf8"));
+
+    // Calcular ventas por lote
+    const ventasPorLote = {};
+    for (const v of ventas) {
+      ventasPorLote[v.idLote] = (ventasPorLote[v.idLote] || 0) + v.cantidad;
+    }
+
+    // Filtrar lotes del producto
+    const lotesDelProducto = productos.filter(lote => lote.idProducto === id);
+
+    if (lotesDelProducto.length === 0) {
+      return res.status(404).json({ error: `No se encontraron lotes para el producto ${id}` });
+    }
+
+    // Armar resultado
+    const resultado = lotesDelProducto.map(lote => ({
+      idLote: lote.idLote,
+      saldo: lote.stock - (ventasPorLote[lote.idLote] || 0),
+      fechaVencimiento: lote.FechaVencimiento,
+      precioCompra: lote.precio  // opcional
+    }));
+
+    res.status(200).json(resultado);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });

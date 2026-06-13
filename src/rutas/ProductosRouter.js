@@ -14,6 +14,8 @@ import {
   getSaldoLote,
   getSaldoProducto,
   getResumenStockPorProducto,
+  getDetalleStockPorProducto,
+  getLotesPorProducto,
   updateProductoWithPrecio,
   updateProductoWithStock,
 } from "../controladores/ProductosControlador.js";
@@ -27,6 +29,8 @@ router.get("/categoria/:categoria", getAllProductosByCategoria);
 router.get("/saldo/lote/:idLote", getSaldoLote);
 router.get("/saldo/producto/:idProducto", getSaldoProducto);
 router.get("/stock/resumen", getResumenStockPorProducto);
+router.get("/stock/detalle/:idProducto", getDetalleStockPorProducto);
+router.get("/stock/:idProducto/lotes", getLotesPorProducto);
 
 // Rutas de productos Privadas
 router.post("/", createProducto);
