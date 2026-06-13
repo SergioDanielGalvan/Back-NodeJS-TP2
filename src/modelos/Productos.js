@@ -71,20 +71,18 @@ productoSchema.statics.eliminarPorIdLote = async function (idLote) {
 // ----- Funciones de saldo -----
 export async function getSaldoLote( idLote ) {
   try {
-    console.log("Obteniendo saldo para idLote:", idLote);
     const productosData = await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8");
     const productos = JSON.parse(productosData);
-    console.log("Productos cargados:", productos.length );
-    const producto = productos.find( p => p.idLote === Number(idLote) );
+    const producto = productos.find( p => p.idLote === idLote );
     if (!producto) throw new Error(`Producto con idLote ${idLote} no encontrado`);
 
     const ventasData = await fs.readFile(path.join(DATA_PATH, "DetalleVentas.json"), "utf8");
     const detalleVentas = JSON.parse(ventasData);
-    const ventasProducto = detalleVentas.filter(dv => dv.idLote === Number(idLote));
+    const ventasProducto = detalleVentas.filter( dv => dv.idLote === idLote );
     const totalVendidos = ventasProducto.reduce((total, venta) => total + venta.cantidad, 0);
 
     const saldo = producto.stock - totalVendidos;
-    return saldo;
+    return { "idLote": idLote, "Saldo": saldo };
   } catch (error) {
     console.error("Error al leer el archivo:", error);
     throw error;
@@ -94,15 +92,15 @@ export async function getSaldoLote( idLote ) {
 export async function getSaldoProducto( idProducto ) {
   const productosData = await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8");
   const productos = JSON.parse(productosData);
-  const lotesDelProducto = productos.filter(p => p.idProducto === Number(idProducto));
+  const lotesDelProducto = productos.filter( p => p.idProducto === idProducto );
   if (lotesDelProducto.length === 0) return 0;
 
   let saldoTotal = 0;
   for (const lote of lotesDelProducto) {
     const saldo = await getSaldoLote(lote.idLote);
-    saldoTotal += saldo;
+    saldoTotal += saldo.Saldo;
   }
-  return saldoTotal;
+  return { "idProducto": idProducto, "Saldo": saldoTotal };
 }
 
 export async function getProductosConBajoStockOptimizado() {

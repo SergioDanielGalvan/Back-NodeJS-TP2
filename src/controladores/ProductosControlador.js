@@ -190,7 +190,7 @@ export const getAllProductosByNombre = async (req, res) => {
 export const getSaldoLote = async (req, res) => {
   try {
     const { idLote } = req.params;
-    const saldo = await getSaldoLoteModel( idLote );
+    const saldo = await getSaldoLoteModel( Number( idLote ) );
     res.status(200).json(saldo);
   } catch (error) {
     res.status(500).json({ error: "Error del servidor" });
@@ -203,7 +203,7 @@ export const getSaldoLote = async (req, res) => {
 export const getSaldoProducto = async (req, res) => {
   try {
     const { idProducto } = req.params;
-    const saldo = await getSaldoProductoModel( idProducto );
+    const saldo = await getSaldoProductoModel( Number( idProducto ) );
     res.status(200).json(saldo);
   } catch (error) {
     res.status(500).json({ error: "Error del servidor" });
