@@ -1,0 +1,11 @@
+[
+    {
+        "idRecibo": 1,
+        "idCliente": 1,
+        "nroRecibo": "R001",
+        "monto": 120000,
+        "medioDePago": "Efectivo",
+        "fechaRecibo": "2023-01-01T00:00:00.000Z",
+        "fechaAcreditacion": "2023-01-02T00:00:00.000Z"
+    }
+]
