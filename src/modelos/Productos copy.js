@@ -1,4 +1,4 @@
-// models/Productos.js
+// modelos/Productos.js
 import mongoose from "mongoose";
 const fs = require('fs').promises;
 const path = require('path');

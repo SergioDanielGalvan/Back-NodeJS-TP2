@@ -1,3 +1,4 @@
+// modelos/MaestroProductos.js
 import mongoose from "mongoose";
 
 const maestroProductoSchema = new mongoose.Schema(
