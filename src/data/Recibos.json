@@ -5,7 +5,26 @@
         "nroRecibo": "R001",
         "monto": 120000,
         "medioDePago": "Efectivo",
-        "fechaRecibo": "2023-01-01T00:00:00.000Z",
-        "fechaAcreditacion": "2023-01-02T00:00:00.000Z"
+        "fechaRecibo": "2026-03-13",
+        "fechaAcreditacion": "2026-03-12"
+    },
+    {
+        "idRecibo": 2,
+        "idCliente": 2,
+        "nroRecibo": "R002",
+        "monto": 932920,
+        "medioDePago": "Transferencia",
+        "fechaRecibo": "2026-03-13",
+        "fechaAcreditacion": "2026-03-13"
+    },
+    {
+        "idRecibo": 3,
+        "idCliente": 3,
+        "nroRecibo": "R003",
+        "monto": 226000,
+        "medioDePago": "Tarjeta de Crédito",
+        "fechaRecibo": "2026-03-22",
+        "fechaAcreditacion": "2026-03-25"
     }
+
 ]

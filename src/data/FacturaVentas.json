@@ -4,7 +4,7 @@
     "idCliente": 1,
     "nroFactura": "0002-00000123",
     "fechaFactura": "2026-03-10",
-    "fecha": "2023-01-01",
+    "fecha": "2026-03-11",
     "total": 120000
     },
     {
@@ -12,15 +12,15 @@
     "idCliente": 2,
     "nroFactura": "0002-00000124",
     "fechaFactura": "2026-03-12",
-    "fecha": "2023-02-01",
+    "fecha": "2026-03-11",
     "total": 932920
     },
     {
     "idFacturaVenta": 3,
     "idCliente": 3,
     "nroFactura": "0002-00000125",
-    "fechaFactura": "2026-03-15",
-    "fecha": "2023-03-01",
+    "fechaFactura": "2026-03-21",
+    "fecha": "2026-03-21",
     "total": 226000
     }
 ]
