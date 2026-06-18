@@ -132,7 +132,7 @@ export async function getProductosConBajoStockOptimizado() {
     }));
 }
 
-export async function getValorInventario(idProducto) {
+export async function getValorInventario( idProducto ) {
   const productosData = await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8");
   const productos = JSON.parse(productosData);
   const lotesDelProducto = productos.filter(p => p.idProducto === idProducto);
@@ -143,6 +143,18 @@ export async function getValorInventario(idProducto) {
     valorTotal += lote.precio * saldo;
   }
   return valorTotal;
+}
+
+export async function getListaLotesDisponibles( idProducto, fecha  ) {
+  fechaCorte = fecha ? new Date(fecha) : new Date();
+  const productosData = await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8");
+  const productos = JSON.parse(productosData);
+  const lotesDelProducto = productos.filter( p => p.idProducto === idProducto && p.stock > 0 && new Date( p.FechaVencimiento) > fechaCorte );
+
+  // Ordenar por fecha de vencimiento (FEFO)
+  lotesDelProducto.sort((a, b) => new Date(a.FechaVencimiento) - new Date(b.FechaVencimiento));
+
+  return lotesDelProducto;
 }
 
 const Producto = mongoose.model("Producto", productoSchema);
