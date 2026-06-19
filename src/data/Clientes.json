@@ -14,13 +14,21 @@
     "email": "",
     "fecha": "2023-02-01"
     },
-    {   
+    {
     "idCliente": 3,
     "nombre": "Cliente C",
     "nroCUIT" : "30-12345678-9",
     "situacionIVA": "I",
     "email": "",
     "fecha": "2023-03-01"
+    },
+    {
+    "idCliente": 4,
+    "nombre": "Cliente D",
+    "nroCUIT" : "23-14335678-9",
+    "situacionIVA": "C",
+    "email": "",
+    "fecha": "2023-04-11"
     }
     
 ]

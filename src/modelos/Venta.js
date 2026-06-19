@@ -2,6 +2,7 @@
 
 import mongoose from "mongoose";
 import { getListaLotesDisponibles } from "./Productos.js";
+import { getNuevoNroFactura } from "./FacturaCompra.js";
 
 const ventaSchema = new mongoose.Schema({
   idFacturaVenta: { type: Number, unique: true },
@@ -65,7 +66,7 @@ export async function emitirFactura( aListaPedido, idCliente, nroFactura, fechaF
                 lote.cargado = consumo;
                 lote.saldo -= consumo;
                 consumo = 0;
-                break;
+                break;  // Ya se completó el consumo para este producto, paso al siguiente
             } else {
                 lote.cargado = lote.saldo;
                 lote.saldo = 0;
@@ -76,7 +77,16 @@ export async function emitirFactura( aListaPedido, idCliente, nroFactura, fechaF
             throw new Error(`No hay stock suficiente para el producto ${itemPedido.idProducto}.`);
         }
     }
+
+    // Si se llega aquí, significa que hay stock suficiente para todos los productos en el pedido
+    // Proceder a emitir la factura y actualizar el stock de los lotes correspondientes
+    // Aquí se debería crear el documento de la factura en la base de datos y luego actualizar el stock de los lotes según lo cargado en cada uno
+    const nroFactura = await getNuevoNroFactura();
+    if ( !nroFactura ) {
+        throw new Error("No se pudo generar un nuevo número de factura.");
+    }
     
+
 
 
 }
