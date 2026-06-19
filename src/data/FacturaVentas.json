@@ -2,6 +2,8 @@
     {
     "idFacturaVenta": 1,
     "idCliente": 1,
+    "tipoComprobante": "F",
+    "letraComprobante": "A",
     "nroFactura": "0002-00000123",
     "fechaFactura": "2026-03-10",
     "fecha": "2026-03-11",
@@ -10,6 +12,8 @@
     {
     "idFacturaVenta": 2,
     "idCliente": 2,
+    "tipoComprobante": "F",
+    "letraComprobante": "A",
     "nroFactura": "0002-00000124",
     "fechaFactura": "2026-03-12",
     "fecha": "2026-03-11",
@@ -18,6 +22,8 @@
     {
     "idFacturaVenta": 3,
     "idCliente": 3,
+    "tipoComprobante": "F",
+    "letraComprobante": "A",
     "nroFactura": "0002-00000125",
     "fechaFactura": "2026-03-21",
     "fecha": "2026-03-21",

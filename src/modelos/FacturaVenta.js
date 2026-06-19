@@ -2,7 +2,7 @@
 
 import mongoose from "mongoose";
 
-// Esto es para poder usar la lectura de JSON, con Moongose se saca.
+// Esto es para poder usar la lectura de JSON, con Mongoose se saca.
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -24,5 +24,24 @@ const facturaVentaSchema = new mongoose.Schema({
   fechaUltimoMovimiento: Date,
   operador: String
 }, { versionKey: false });
+
+export async function getNuevoNroFactura() {
+  try {
+    const facturasVentaData = await fs.readFile(path.join(DATA_PATH, "FacturasVenta.json"), "utf8");
+    const facturasVenta = JSON.parse(facturasVentaData);
+    if ( facturasVenta.length === 0 ) {
+      return { "NroFactura": "00001-00000001" };
+    }
+    const ultimoNroFactura = facturasVenta.reduce( (ultimo, factura) => {
+      const nroFactura = factura.nroFactura.replace("-", "");
+      return nroFactura > ultimo ? nroFactura : ultimo;
+    }, "0000100000001");
+    ultimoNroFactura = ultimoNroFactura.substr(0, 5) + "-" + ultimoNroFactura.substr(5, 8);
+    return { "NroFactura": ultimoNroFactura };
+  } catch (error) {
+    console.error("Error al leer el archivo:", error);
+    throw error;
+  }
+};
 
 export default mongoose.model("FacturaVenta", facturaVentaSchema);

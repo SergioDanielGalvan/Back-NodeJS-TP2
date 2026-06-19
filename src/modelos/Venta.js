@@ -57,6 +57,7 @@ export async function emitirFactura( aListaPedido, idCliente, nroFactura, fechaF
     // Fin Checks de parámetros de entrada
     // Obtener la lista de lotes disponibles para cada producto en el pedido
     // Verificar que para cada producto en el pedido haya stock suficiente en los lotes disponibles
+    let montoTotal = 0;
     for ( const itemPedido of aListaPedido ) {
         let listaLotesDisponibles = await getListaLotesDisponibles( itemPedido.idProducto, fechaFactura );
         let consumo = ( itemPedido.cantidad < 0 ) ? 0 : itemPedido.cantidad;
@@ -72,10 +73,13 @@ export async function emitirFactura( aListaPedido, idCliente, nroFactura, fechaF
                 lote.saldo = 0;
                 consumo -= lote.cargado;
             }
+
         }
         if ( consumo > 0 ) {
             throw new Error(`No hay stock suficiente para el producto ${itemPedido.idProducto}.`);
         }
+        montoTotal += lote.cargado * itemPedido.precioventa;
+
     }
 
     // Si se llega aquí, significa que hay stock suficiente para todos los productos en el pedido
@@ -85,10 +89,16 @@ export async function emitirFactura( aListaPedido, idCliente, nroFactura, fechaF
     if ( !nroFactura ) {
         throw new Error("No se pudo generar un nuevo número de factura.");
     }
+    else if ( typeof nroFactura.NroFactura !== "string" ) {
+        throw new Error("El número de factura generado no es válido.");
+    }
+    else if ( nroFactura.NroFactura.trim().length !=14 ) {
+        throw new Error("El número de factura generado debe tener 14 caracteres incluyendo el guion.");
+    }
     
 
-
-
 }
+
+
 
 export default mongoose.model("Venta", ventaSchema);
