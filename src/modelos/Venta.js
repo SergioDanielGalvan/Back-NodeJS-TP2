@@ -33,7 +33,6 @@ export async function emitirFactura1( aListaPedido, idCliente, nroFactura, fecha
     // Obtener el último ID de factura para generar uno nuevo, debo separar sucursal de Numero de factura
     const ultimaFactura = await mongoose.model("Venta").findOne().sort({ idFacturaVenta: -1 });
     const nuevoIdFactura = ultimaFactura ? ultimaFactura.idFacturaVenta + 1 : 1;
-
 }
 
 export async function emitirFactura( aListaPedido, idCliente, nroFactura, fechaFactura ) {
@@ -47,24 +46,38 @@ export async function emitirFactura( aListaPedido, idCliente, nroFactura, fechaF
     if ( typeof idCliente !== "number" || typeof nroFactura !== "string" || !( fechaFactura instanceof Date) ) {
         throw new Error("Tipo de dato incorrecto para idCliente, nroFactura o fechaFactura.");
     }
-    if ( nroFactura.trim().length < 12 || nroFactura.trim().length > 13 ) {
-        throw new Error("El número de factura debe tener entre 12 y 13 caracteres.");
+    if ( nroFactura.trim().length < 13 || nroFactura.trim().length > 14 ) {
+        throw new Error("El número de factura debe tener entre 13 y 14 caracteres.");
     }
-    else if ( nroFactura.trim().length === 12 ) {
-        // Procesar factura de 13 caracteres por sucursal + '-' + número de factura
-        nroFactura = nroFactura.substr(0, 4) + "-" + nroFactura.substr(4);
+    else if ( nroFactura.trim().length === 13 ) {
+        // Procesar factura de 14 caracteres por sucursal + '-' + número de factura
+        nroFactura = nroFactura.substr(0, 5) + "-" + nroFactura.substr(5, 8);
     }
     // Fin Checks de parámetros de entrada
     // Obtener la lista de lotes disponibles para cada producto en el pedido
-    const listaLotesDisponibles = await getListaLotesDisponibles( aListaPedido );
     // Verificar que para cada producto en el pedido haya stock suficiente en los lotes disponibles
     for ( const itemPedido of aListaPedido ) {
-        const loteDisponible = listaLotesDisponibles.find( l => l.idLote === itemPedido.idLote );
-        if ( !loteDisponible || loteDisponible.stock < itemPedido.cantidad ) {
-            throw new Error(`Stock insuficiente para el producto con ID ${itemPedido.idProducto}`);
+        let listaLotesDisponibles = await getListaLotesDisponibles( itemPedido.idProducto, fechaFactura );
+        let consumo = ( itemPedido.cantidad < 0 ) ? 0 : itemPedido.cantidad;
+        for ( let i = 0, len = listaLotesDisponibles.length; i < len; i++ ) {
+            let lote = listaLotesDisponibles[i];
+            if ( lote.saldo >= consumo ) {
+                lote.cargado = consumo;
+                lote.saldo -= consumo;
+                consumo = 0;
+                break;
+            } else {
+                lote.cargado = lote.saldo;
+                lote.saldo = 0;
+                consumo -= lote.cargado;
+            }
+        }
+        if ( consumo > 0 ) {
+            throw new Error(`No hay stock suficiente para el producto ${itemPedido.idProducto}.`);
         }
     }
-    // Obtener el último ID de factura para generar uno nuevo, debo separar sucursal de Numero de factura
+    
+
 
 }
 

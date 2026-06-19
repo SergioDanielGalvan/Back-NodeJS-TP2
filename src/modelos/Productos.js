@@ -149,11 +149,27 @@ export async function getListaLotesDisponibles( idProducto, fecha  ) {
   fechaCorte = fecha ? new Date(fecha) : new Date();
   const productosData = await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8");
   const productos = JSON.parse(productosData);
+  const maestroData = await fs.readFile(path.join(DATA_PATH, "MaestroProductos.json"), "utf8");
+  const maestro = JSON.parse(maestroData);
   const lotesDelProducto = productos.filter( p => p.idProducto === idProducto && p.stock > 0 && new Date( p.FechaVencimiento) > fechaCorte );
 
   // Ordenar por fecha de vencimiento (FEFO)
   lotesDelProducto.sort((a, b) => new Date(a.FechaVencimiento) - new Date(b.FechaVencimiento));
+  lotesDelProducto= lotesDelProducto.map( lote => ({
+    idLote: lote.idLote,
+    idProducto: lote.idProducto,
+    stock: lote.stock,
+    FechaVencimiento: lote.FechaVencimiento,
+    // saldo: getSaldoProducto(lote.idLote).then(s => s.Saldo),
+    cargado : 0         // Campo para controlar cuánto se ha cargado de ese lote en la venta actual
+  }));
 
+  for ( let i = 0, len = lotesDelProducto.length; i < len; i++ ) {
+    pos = maestro.findIndex( m => m.idProducto === lotesDelProducto[i].idProducto );
+    lotesDelProducto[i].nombreProducto = maestro[pos].nombre;
+    lotesDelProducto[i].saldo = await lotesDelProducto[i].saldo;
+    lotesDelProducto[i].precioVenta = maestro[pos].precioventa;
+  }
   return lotesDelProducto;
 }
 

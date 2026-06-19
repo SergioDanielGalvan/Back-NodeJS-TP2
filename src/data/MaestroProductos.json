@@ -8,7 +8,8 @@
     ],
     "EAN": "7793253006716",
     "stockminimo": 100,
-    "puntoPedido": 120
+    "puntoPedido": 120,
+    "precioventa": 3800
   },
   {
     "idProducto": 2,
@@ -19,7 +20,8 @@
     ],
     "EAN": "7793253006709",
     "stockminimo": 200,
-    "puntoPedido": 240
+    "puntoPedido": 240,
+    "precioventa": 2300
   },
   {
     "idProducto": 3,
@@ -30,7 +32,8 @@
     ],
     "EAN": "7791905024248",
     "stockminimo": 230,
-    "puntoPedido": 250
+    "puntoPedido": 250,
+    "precioventa": 3700
   },
   {
     "idProducto": 4,
@@ -41,7 +44,8 @@
     ],
     "EAN": "7790990003398",
     "stockminimo": 60,
-    "puntoPedido": 70
+    "puntoPedido": 70,
+    "precioventa": 4900
   },
   {
     "idProducto": 5,
@@ -52,7 +56,8 @@
     ],
     "EAN": "7791290794306",
     "stockminimo": 100,
-    "puntoPedido": 120
+    "puntoPedido": 120,
+    "precioventa": 3950
   },
   {
     "idProducto": 6,
@@ -63,7 +68,8 @@
     ],
     "EAN": "7791130683760",
     "stockminimo": 100,
-    "puntoPedido": 120
+    "puntoPedido": 120,
+    "precioventa": 7800
   },
   {
     "idProducto": 7,
@@ -74,7 +80,8 @@
     ],
     "EAN": "7791290793354",
     "stockminimo": 100,
-    "puntoPedido": 120
+    "puntoPedido": 120,
+    "precioventa": 7500
   },
   {
     "idProducto": 8,
@@ -85,7 +92,8 @@
     ],
     "EAN": "7791130683869",
     "stockminimo": 40,
-    "puntoPedido": 45
+    "puntoPedido": 45,
+    "precioventa": 4470
   },
   {
     "idProducto": 9,
@@ -96,7 +104,8 @@
     ],
     "EAN": "7791290795624",
     "stockminimo": 200,
-    "puntoPedido": 240
+    "puntoPedido": 240,
+    "precioventa": 5100
   }
 
 ]
