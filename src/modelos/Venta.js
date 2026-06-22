@@ -41,7 +41,7 @@ export async function emitirFactura( aListaPedido, idCliente, fechaFactura ) {
     if ( !aListaPedido || !idCliente || !fechaFactura ) {
         throw new Error("Faltan parámetros requeridos para emitir la factura.");
     }
-    if ( !Array.isArray(aListaPedido) || aListaPedido.length === 0 ) {
+    if ( !Array.isArray( aListaPedido ) || aListaPedido.length === 0 ) {
         throw new Error("La lista de pedido debe ser un array no vacío.");
     }
     if ( typeof idCliente !== "number" || !( fechaFactura instanceof Date) ) {
@@ -77,7 +77,6 @@ export async function emitirFactura( aListaPedido, idCliente, fechaFactura ) {
     }
 
     // Si se llega aquí, significa que hay stock suficiente para todos los productos en el pedido
-    
 
     // Proceder a emitir la factura y actualizar el stock de los lotes correspondientes
     // Aquí se debería crear el documento de la factura en la base de datos y luego actualizar el stock de los lotes según lo cargado en cada uno
@@ -91,7 +90,10 @@ export async function emitirFactura( aListaPedido, idCliente, fechaFactura ) {
     else if ( datosFactura.nroFactura.trim().length !=14 ) {
         throw new Error( "El número de factura generado debe tener 14 caracteres incluyendo el guion." );
     }
-    
+    generarDetalleVenta( listaLotesDisponibles );
+    // grabarDescargaStock( listaLotesDisponibles ); // No es necesario, no hay Saldo en el Registro.
+
+    grabarFactura( datosFactura );
 }
 
 async function grabarFactura( adatosFactura ) {

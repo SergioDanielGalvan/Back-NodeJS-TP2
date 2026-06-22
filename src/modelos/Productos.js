@@ -174,29 +174,37 @@ export async function getListaLotesDisponibles( idProducto, fecha ) {
 }
 
 export async function grabarDescargaStock( lotesDescarga ) {
-  if (!lotesDescarga || lotesDescarga.length === 0) {
+  if ( !lotesDescarga || lotesDescarga.length === 0 ) {
     throw new Error("No se pudo descargar stocks.");
   }
 
-  const productosData = await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8");
-  const productos = JSON.parse(productosData);
+  const productosData = await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8" );
+  const productos = JSON.parse( productosData );
 
-  for (const lote of lotesDescarga) {
-    const { saldo } = await getSaldoLote(lote.idLote);
+  for ( const lote of lotesDescarga ) {
+    const { saldo } = await getSaldoLote( lote.idLote );
     // Supongo que 'cargado' es la cantidad a descontar; si es 'cantidad', cámbialo.
     const cantidadADescontar = lote.cargado || lote.cantidad; 
 
-    if (saldo > 0 && saldo >= cantidadADescontar) {
+    if ( saldo > 0 && saldo >= cantidadADescontar ) {
       // Buscar el índice del producto que coincide con el idLote
       const index = productos.findIndex(p => p.idLote === lote.idLote);
       
-      if (index !== -1) {
+      if ( index !== -1 ) {
         // Actualizar el stock del producto (restar la cantidad descargada)
-        productos[index].stock -= cantidadADescontar;
-        // Si necesitas registrar otros campos, hazlo aquí.
+        //productos[index].saldo -= cantidadADescontar;
+        // El saldo del Lote se recalcula dinámicamente en función de los movimientos en detalleVentas
       } else {
         // Opcional: manejar el caso de que no exista el lote en productos
         console.warn(`No se encontró producto con idLote ${lote.idLote}`);
+      }
+    }
+    else {
+      if ( saldo ==  0 ) {
+        console.warn(`No hay saldo disponible en el Lote ${lote.idLote}`);
+      }
+      else {
+        console.warn(`No hay saldo suficiente en el Lote ${lote.idLote}`);
       }
     }
   }
