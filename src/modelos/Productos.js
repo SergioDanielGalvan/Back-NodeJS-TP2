@@ -145,7 +145,7 @@ export async function getValorInventario( idProducto ) {
   return valorTotal;
 }
 
-export async function getListaLotesDisponibles( idProducto, fecha  ) {
+export async function getListaLotesDisponibles( idProducto, fecha ) {
   fechaCorte = fecha ? new Date(fecha) : new Date();
   const productosData = await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8");
   const productos = JSON.parse(productosData);
@@ -167,10 +167,42 @@ export async function getListaLotesDisponibles( idProducto, fecha  ) {
   for ( let i = 0, len = lotesDelProducto.length; i < len; i++ ) {
     pos = maestro.findIndex( m => m.idProducto === lotesDelProducto[i].idProducto );
     lotesDelProducto[i].nombreProducto = maestro[pos].nombre;
-    lotesDelProducto[i].saldo = await lotesDelProducto[i].saldo;
     lotesDelProducto[i].precioVenta = maestro[pos].precioventa;
+    lotesDelProducto[i].saldo = await getSaldoLote( lotesDelProducto[i].idLote );
   }
   return lotesDelProducto;
+}
+
+export async function grabarDescargaStock( lotesDescarga ) {
+  if (!lotesDescarga || lotesDescarga.length === 0) {
+    throw new Error("No se pudo descargar stocks.");
+  }
+
+  const productosData = await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8");
+  const productos = JSON.parse(productosData);
+
+  for (const lote of lotesDescarga) {
+    const { saldo } = await getSaldoLote(lote.idLote);
+    // Supongo que 'cargado' es la cantidad a descontar; si es 'cantidad', cámbialo.
+    const cantidadADescontar = lote.cargado || lote.cantidad; 
+
+    if (saldo > 0 && saldo >= cantidadADescontar) {
+      // Buscar el índice del producto que coincide con el idLote
+      const index = productos.findIndex(p => p.idLote === lote.idLote);
+      
+      if (index !== -1) {
+        // Actualizar el stock del producto (restar la cantidad descargada)
+        productos[index].stock -= cantidadADescontar;
+        // Si necesitas registrar otros campos, hazlo aquí.
+      } else {
+        // Opcional: manejar el caso de que no exista el lote en productos
+        console.warn(`No se encontró producto con idLote ${lote.idLote}`);
+      }
+    }
+  }
+
+  // Guardar los cambios en el archivo
+  await fs.writeFile( path.join(DATA_PATH, "Productos.json"), JSON.stringify(productos, null, 2) );
 }
 
 const Producto = mongoose.model("Producto", productoSchema);

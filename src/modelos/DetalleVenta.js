@@ -28,4 +28,6 @@ const detalleVentaSchema = new mongoose.Schema({
   operador: String
 }, { versionKey: false });
 
+
+
 export default mongoose.model("DetalleVenta", detalleVentaSchema);
