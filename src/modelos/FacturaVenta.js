@@ -17,8 +17,11 @@ const DATA_PATH = path.join(__dirname, "../data");
 const facturaVentaSchema = new mongoose.Schema({
   idFacturaVenta: { type: Number, unique: true },
   idCliente: Number,
+  tipoComprobante: String,
+  letraComprobante: String,
   nroFactura: String,
   fechaFactura: Date,
+  fecha: Date,
   montoTotal: Number,
   fechaAlta: Date,
   fechaUltimoMovimiento: Date,

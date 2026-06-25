@@ -26,19 +26,27 @@ const maestroProductoSchema = new mongoose.Schema(
       default: [],
     },
 
+    // Precio de venta del catálogo (presente en los datos y en el diseño).
+    precioventa: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+
     descripcion: {
       type: String,
       default: "",
     },
 
+    // Opcionales: los datos migrados no traen unidadMedida/envase.
     unidadMedida: {
       type: String,
-      required: true,
+      default: "",
     },
 
     envase: {
       type: String,
-      required: true,
+      default: "",
     },
 
     stockMinimo: {

@@ -15,8 +15,11 @@ const productoSchema = new mongoose.Schema(
   {
     idLote: { type: Number, unique: true },
     idProducto: { type: Number, required: true },
+    idFacturaCompra: { type: Number },
+    idDetalleCompra: { type: Number },
     precio: { type: Number, required: true, min: 0 },
     stock: { type: Number, required: true, min: 0 },
+    fechaIngresoStock: { type: Date },
     FechaVencimiento: { type: Date, default: "2027-01-01" },
   },
   { timestamps: true, versionKey: false }

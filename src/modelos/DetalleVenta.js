@@ -21,7 +21,7 @@ const detalleVentaSchema = new mongoose.Schema({
   idLote: Number,
   cantidad: Number,
   precioUnitario: Number,
-  montototal: Number,
+  montoTotal: Number,
   unidadmedida: String,
   fechaAlta: Date,
   fechaUltimoMovimiento: Date,

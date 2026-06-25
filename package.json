@@ -9,6 +9,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "node --watch app.js",
+    "seed": "node src/servicios/migrar.js",
+    "seed:force": "node src/servicios/migrar.js --force",
     "vercel-build": "npm install"
   },
   "dependencies": {
