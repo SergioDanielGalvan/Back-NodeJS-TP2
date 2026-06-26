@@ -14,16 +14,19 @@ const productoSchema = new mongoose.Schema(
     fechaIngresoStock: { type: Date },
     FechaVencimiento: { type: Date, default: "2027-01-01" },
   },
-  { timestamps: true, versionKey: false }
+  { timestamps: true, versionKey: false },
 );
 
 // Auto-incremento de idLote para altas nuevas
-productoSchema.pre("save", async function (next) {
+productoSchema.pre("save", async function () {
   if (this.isNew && !this.idLote) {
-    const ultimo = await mongoose.model("Producto").findOne().sort({ idLote: -1 });
+    const ultimo = await mongoose
+      .model("Producto")
+      .findOne()
+      .sort({ idLote: -1 });
+
     this.idLote = ultimo ? ultimo.idLote + 1 : 1;
   }
-  next();
 });
 
 // ----- Statics CRUD -----
@@ -44,11 +47,19 @@ productoSchema.statics.crearProducto = function (dataProducto) {
 };
 
 productoSchema.statics.actualizarStock = function (idLote, nuevoStock) {
-  return this.findOneAndUpdate({ idLote }, { stock: nuevoStock }, { new: true }).lean();
+  return this.findOneAndUpdate(
+    { idLote },
+    { stock: nuevoStock },
+    { new: true },
+  ).lean();
 };
 
 productoSchema.statics.actualizarPrecio = function (idLote, nuevoPrecio) {
-  return this.findOneAndUpdate({ idLote }, { precio: nuevoPrecio }, { new: true }).lean();
+  return this.findOneAndUpdate(
+    { idLote },
+    { precio: nuevoPrecio },
+    { new: true },
+  ).lean();
 };
 
 productoSchema.statics.eliminarPorIdLote = function (idLote) {
@@ -82,12 +93,14 @@ export async function getSaldoLote(idLote) {
 }
 
 export async function getSaldoProducto(idProducto) {
-  const lotes = await Producto.find({ idProducto }).select("idLote stock").lean();
+  const lotes = await Producto.find({ idProducto })
+    .select("idLote stock")
+    .lean();
   if (lotes.length === 0) return { idProducto, Saldo: 0 };
   const mapa = await ventasPorLote(lotes.map((l) => l.idLote));
   const saldoTotal = lotes.reduce(
     (acc, l) => acc + (l.stock - (mapa.get(l.idLote) || 0)),
-    0
+    0,
   );
   return { idProducto, Saldo: saldoTotal };
 }
@@ -107,23 +120,29 @@ export async function getProductosConBajoStockOptimizado() {
   }
 
   return maestro
-    .filter((prod) => (saldoPorProducto[prod.idProducto] || 0) < (prod.stockMinimo || 0))
+    .filter(
+      (prod) =>
+        (saldoPorProducto[prod.idProducto] || 0) < (prod.stockMinimo || 0),
+    )
     .map((prod) => ({
       idProducto: prod.idProducto,
       nombre: prod.nombre,
       saldoActual: saldoPorProducto[prod.idProducto] || 0,
       stockMinimo: prod.stockMinimo || 0,
-      diferencia: (prod.stockMinimo || 0) - (saldoPorProducto[prod.idProducto] || 0),
+      diferencia:
+        (prod.stockMinimo || 0) - (saldoPorProducto[prod.idProducto] || 0),
     }));
 }
 
 export async function getValorInventario(idProducto) {
-  const lotes = await Producto.find({ idProducto }).select("idLote precio stock").lean();
+  const lotes = await Producto.find({ idProducto })
+    .select("idLote precio stock")
+    .lean();
   if (lotes.length === 0) return 0;
   const mapa = await ventasPorLote(lotes.map((l) => l.idLote));
   return lotes.reduce(
     (acc, l) => acc + l.precio * (l.stock - (mapa.get(l.idLote) || 0)),
-    0
+    0,
   );
 }
 
