@@ -7,7 +7,7 @@ import { connectDB } from "./src/config/mongodb.js";
 import maestroProductosRouter from "./src/rutas/MaestroProductosRouter.js";
 import maestroProductosRouterViews from "./src/rutas/MaestroProductosRouterViews.js";
 import productosRouter from "./src/rutas/ProductosRouter.js";
-import usersRouter from "./src/rutas/UsuariosRouter.js";
+import operadoresRouter from "./src/rutas/OperadoresRouter.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -36,7 +36,7 @@ app.get("/", (req, res) => {
   res.render("index", { titulo: "TodoStock S.A." });
 });
 
-app.use("/api/usuarios", usersRouter);
+app.use("/api/operadores", operadoresRouter);
 app.use("/api/productos", productosRouter);
 app.use("/api/maestroproductos", maestroProductosRouter);
 app.use("/maestroproductos", maestroProductosRouterViews);

@@ -37,6 +37,19 @@ const operadorSchema = new mongoose.Schema(
   { versionKey: false }
 );
 
+// Auto-incremento de idOperador para altas nuevas (la migración ya trae el id).
+operadorSchema.pre("validate", async function (next) {
+  if (this.idOperador == null) {
+    const ultimo = await this.constructor
+      .findOne()
+      .sort("-idOperador")
+      .select("idOperador")
+      .lean();
+    this.idOperador = (ultimo?.idOperador || 0) + 1;
+  }
+  next();
+});
+
 operadorSchema.statics.buscarPorEmail = function (email) {
   return this.findOne({ email: email.toLowerCase() });
 };
@@ -47,6 +60,14 @@ operadorSchema.statics.obtenerTodos = function () {
 
 operadorSchema.statics.obtenerPorId = function (id) {
   return this.findById(id).select("-claveHash").lean();
+};
+
+operadorSchema.statics.crearOperador = function (datos) {
+  return this.create(datos);
+};
+
+operadorSchema.statics.eliminar = function (id) {
+  return this.findByIdAndDelete(id);
 };
 
 export default mongoose.model("Operador", operadorSchema);

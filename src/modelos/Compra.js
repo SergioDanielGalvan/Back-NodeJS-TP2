@@ -1,1 +1,0 @@
-// Módulo de compra: FacturaCompra + DetalleCompra
