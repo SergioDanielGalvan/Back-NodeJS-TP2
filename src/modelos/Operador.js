@@ -38,7 +38,8 @@ const operadorSchema = new mongoose.Schema(
 );
 
 // Auto-incremento de idOperador para altas nuevas (la migración ya trae el id).
-operadorSchema.pre("validate", async function (next) {
+// IMPORTANTE: hook async SIN next() (mezclar ambos rompe la validación en Mongoose).
+operadorSchema.pre("validate", async function () {
   if (this.idOperador == null) {
     const ultimo = await this.constructor
       .findOne()
@@ -47,7 +48,6 @@ operadorSchema.pre("validate", async function (next) {
       .lean();
     this.idOperador = (ultimo?.idOperador || 0) + 1;
   }
-  next();
 });
 
 operadorSchema.statics.buscarPorEmail = function (email) {

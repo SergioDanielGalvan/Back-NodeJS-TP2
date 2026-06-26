@@ -1,15 +1,20 @@
 // controllers/ProductosControlador.js
 import MaestroProducto from "../modelos/MaestroProductos.js";
-//import Producto from "../modelos/Productos.js";
-//import Producto, { getSaldoLote, getSaldoProducto } from "../modelos/Productos.js";
 import Producto, { getSaldoLote as getSaldoLoteModel, getSaldoProducto as getSaldoProductoModel } from "../modelos/Productos.js";
-import fs from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
+import DetalleVenta from "../modelos/DetalleVenta.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const DATA_PATH = path.join(__dirname, "../data");
+// Total vendido por lote (desde DetalleVenta). Si se pasan idLotes, filtra.
+async function ventasPorLoteMap(idLotes) {
+  const pipeline = [];
+  if (Array.isArray(idLotes)) {
+    pipeline.push({ $match: { idLote: { $in: idLotes } } });
+  }
+  pipeline.push({ $group: { _id: "$idLote", vendido: { $sum: "$cantidad" } } });
+  const filas = await DetalleVenta.aggregate(pipeline);
+  const mapa = {};
+  for (const f of filas) mapa[f._id] = f.vendido;
+  return mapa;
+}
 
 // --------------------------------------------------------------
 // Obtener todos los productos (lotes) enriquecidos con datos del maestro
@@ -222,15 +227,8 @@ export const getSaldoProducto = async (req, res) => {
 // --------------------------------------------------------------
 export const getResumenStockPorProducto = async (req, res) => {
   try {
-    // Leer archivos JSON directamente (optimizado)
-    const productos = JSON.parse(await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8"));
-    const ventas = JSON.parse(await fs.readFile(path.join(DATA_PATH, "DetalleVentas.json"), "utf8"));
-
-    // Calcular ventas por lote
-    const ventasPorLote = {};
-    for (const v of ventas) {
-      ventasPorLote[v.idLote] = (ventasPorLote[v.idLote] || 0) + v.cantidad;
-    }
+    const productos = await Producto.find().lean();
+    const ventasPorLote = await ventasPorLoteMap();
 
     // Acumular por producto
     const resumen = {};
@@ -249,9 +247,7 @@ export const getResumenStockPorProducto = async (req, res) => {
       resumen[lote.idProducto].cantidadLotes += 1;
     }
 
-    // Convertir a array
-    const resultado = Object.values(resumen);
-    res.status(200).json(resultado);
+    res.status(200).json(Object.values(resumen));
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
@@ -266,27 +262,18 @@ export const getDetalleStockPorProducto = async (req, res) => {
     const { idProducto } = req.params;
     const productoId = Number(idProducto);
 
-    const productos = JSON.parse(await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8"));
-    const ventas = JSON.parse(await fs.readFile(path.join(DATA_PATH, "DetalleVentas.json"), "utf8"));
-
-    // Ventas por lote
-    const ventasPorLote = {};
-    for (const v of ventas) {
-      ventasPorLote[v.idLote] = (ventasPorLote[v.idLote] || 0) + v.cantidad;
-    }
-
-    // Filtrar lotes del producto y calcular saldo
-    const lotesProducto = productos
-      .filter(lote => lote.idProducto === productoId)
-      .map(lote => ({
-        idLote: lote.idLote,
-        saldo: lote.stock - (ventasPorLote[lote.idLote] || 0),
-        fechaVencimiento: lote.FechaVencimiento
-      }));
-
-    if (lotesProducto.length === 0) {
+    const lotes = await Producto.find({ idProducto: productoId }).lean();
+    if (lotes.length === 0) {
       return res.status(404).json({ error: `No se encontraron lotes para el producto ${productoId}` });
     }
+
+    const ventasPorLote = await ventasPorLoteMap(lotes.map(l => l.idLote));
+
+    const lotesProducto = lotes.map(lote => ({
+      idLote: lote.idLote,
+      saldo: lote.stock - (ventasPorLote[lote.idLote] || 0),
+      fechaVencimiento: lote.FechaVencimiento
+    }));
 
     res.status(200).json(lotesProducto);
   } catch (error) {
@@ -300,13 +287,8 @@ export const getDetalleStockPorProducto = async (req, res) => {
 // --------------------------------------------------------------
 export const getDetalleStockPorLote = async (req, res) => {
   try {
-    const productos = JSON.parse(await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8"));
-    const ventas = JSON.parse(await fs.readFile(path.join(DATA_PATH, "DetalleVentas.json"), "utf8"));
-
-    const ventasPorLote = {};
-    for (const v of ventas) {
-      ventasPorLote[v.idLote] = (ventasPorLote[v.idLote] || 0) + v.cantidad;
-    }
+    const productos = await Producto.find().lean();
+    const ventasPorLote = await ventasPorLoteMap();
 
     const detalle = productos.map(lote => ({
       idLote: lote.idLote,
@@ -330,24 +312,13 @@ export const getLotesPorProducto = async (req, res) => {
     const { idProducto } = req.params;
     const id = parseInt(idProducto);
 
-    // Leer archivos
-    const productos = JSON.parse(await fs.readFile(path.join(DATA_PATH, "Productos.json"), "utf8"));
-    const ventas = JSON.parse(await fs.readFile(path.join(DATA_PATH, "DetalleVentas.json"), "utf8"));
-
-    // Calcular ventas por lote
-    const ventasPorLote = {};
-    for (const v of ventas) {
-      ventasPorLote[v.idLote] = (ventasPorLote[v.idLote] || 0) + v.cantidad;
-    }
-
-    // Filtrar lotes del producto
-    const lotesDelProducto = productos.filter(lote => lote.idProducto === id);
-
+    const lotesDelProducto = await Producto.find({ idProducto: id }).lean();
     if (lotesDelProducto.length === 0) {
       return res.status(404).json({ error: `No se encontraron lotes para el producto ${id}` });
     }
 
-    // Armar resultado
+    const ventasPorLote = await ventasPorLoteMap(lotesDelProducto.map(l => l.idLote));
+
     const resultado = lotesDelProducto.map(lote => ({
       idLote: lote.idLote,
       saldo: lote.stock - (ventasPorLote[lote.idLote] || 0),

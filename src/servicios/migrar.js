@@ -31,7 +31,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DATA_PATH = path.join(__dirname, "../data");
 
-const MONGO_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/TP2-IFTS29";
+const MONGO_URI =
+  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/TP2-IFTS29";
 const FORCE = process.argv.includes("--force");
 const SALT_ROUNDS = 10;
 
@@ -196,15 +197,17 @@ async function migrar() {
     for (const { modelo, archivo, map } of PASOS) {
       const datos = await leerJSON(archivo);
       const docs = datos.map(map);
-      await modelo.insertMany(docs, { ordered: false });
-      console.log(`✅ ${modelo.modelName.padEnd(15)} ${String(docs.length).padStart(3)} docs  (${archivo})`);
+      const res = await modelo.insertMany(docs, { ordered: false });
+      const aviso = res.length !== docs.length ? `  ⚠️ se descartaron ${docs.length - res.length}` : "";
+      console.log(`✅ ${modelo.modelName.padEnd(15)} ${String(res.length).padStart(3)}/${docs.length} docs  (${archivo})${aviso}`);
     }
 
     // Operadores aparte (hash asíncrono de la clave)
-    const usuarios = await leerJSON("Usuarios.json");
+    const usuarios = await leerJSON("Operadores.json");
     const operadores = await Promise.all(usuarios.map(tOperador));
-    await Operador.insertMany(operadores, { ordered: false });
-    console.log(`✅ ${"Operador".padEnd(15)} ${String(operadores.length).padStart(3)} docs  (Usuarios.json)`);
+    const resOp = await Operador.insertMany(operadores, { ordered: false });
+    const avisoOp = resOp.length !== operadores.length ? `  ⚠️ se descartaron ${operadores.length - resOp.length}` : "";
+    console.log(`✅ ${"Operador".padEnd(15)} ${String(resOp.length).padStart(3)}/${operadores.length} docs  (Operadores.json)${avisoOp}`);
 
     await verificarIntegridad();
 

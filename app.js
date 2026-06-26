@@ -8,6 +8,7 @@ import maestroProductosRouter from "./src/rutas/MaestroProductosRouter.js";
 import maestroProductosRouterViews from "./src/rutas/MaestroProductosRouterViews.js";
 import productosRouter from "./src/rutas/ProductosRouter.js";
 import operadoresRouter from "./src/rutas/OperadoresRouter.js";
+import comprasRouter from "./src/rutas/ComprasRouter.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/operadores", operadoresRouter);
+app.use("/api/compras", comprasRouter);
 app.use("/api/productos", productosRouter);
 app.use("/api/maestroproductos", maestroProductosRouter);
 app.use("/maestroproductos", maestroProductosRouterViews);
