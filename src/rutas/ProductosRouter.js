@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { verificarToken } from "../middlewares/auth.js";
 
 const router = Router();
 
@@ -32,13 +33,13 @@ router.get("/stock/resumen", getResumenStockPorProducto);
 router.get("/stock/detalle/:idProducto", getDetalleStockPorProducto);
 router.get("/stock/:idProducto/lotes", getLotesPorProducto);
 
-// Rutas de productos Privadas
-router.post("/", createProducto);
+// Rutas de productos Privadas (requieren token)
+router.post("/", verificarToken, createProducto);
 
 // Privada y Admin
-router.delete("/:id", deleteProductoById);
-router.put("/stock/:id", updateProductoWithStock);
-router.put("/precio/:id", updateProductoWithPrecio);
-router.post("/compra", crearRegistroCompra);
+router.delete("/:id", verificarToken, deleteProductoById);
+router.put("/stock/:id", verificarToken, updateProductoWithStock);
+router.put("/precio/:id", verificarToken, updateProductoWithPrecio);
+router.post("/compra", verificarToken, crearRegistroCompra);
 
 export default router;

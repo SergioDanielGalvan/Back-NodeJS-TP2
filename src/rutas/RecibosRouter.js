@@ -1,5 +1,6 @@
 // rutas/RecibosRouter.js
 import { Router } from "express";
+import { verificarToken } from "../middlewares/auth.js";
 
 import {
   getEstadoFactura,
@@ -10,7 +11,7 @@ import {
 
 const router = Router();
 
-router.post("/", registrarRecibo);
+router.post("/", verificarToken, registrarRecibo);
 router.get("/", getRecibos);
 router.get("/factura/:idFacturaVenta", getEstadoFactura);
 router.get("/:id", getReciboById);

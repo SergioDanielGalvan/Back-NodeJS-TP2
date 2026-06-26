@@ -13,8 +13,8 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const operador = await operadoresService.login(email, password);
-    res.json({ message: "Login correcto", operador });
+    const { token, operador } = await operadoresService.login(email, password);
+    res.json({ message: "Login correcto", token, operador });
   } catch (error) {
     res.status(401).json({ error: error.message });
   }

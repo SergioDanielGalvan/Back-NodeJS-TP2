@@ -1,5 +1,6 @@
 // rutas/ComprasRouter.js
 import { Router } from "express";
+import { verificarToken } from "../middlewares/auth.js";
 
 import {
   getCompraById,
@@ -9,7 +10,7 @@ import {
 
 const router = Router();
 
-router.post("/", registrarCompra);
+router.post("/", verificarToken, registrarCompra);
 router.get("/", getCompras);
 router.get("/:id", getCompraById);
 

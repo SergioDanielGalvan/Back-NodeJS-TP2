@@ -1,6 +1,8 @@
 // servicios/OperadoresService.js
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import Operador from "../modelos/Operador.js";
+import { JWT_SECRET, JWT_EXPIRES } from "../config/jwt.js";
 
 const SALT_ROUNDS = 10;
 
@@ -52,7 +54,18 @@ class OperadoresService {
       throw new Error("Credenciales inválidas");
     }
 
-    return this.#perfilPublico(operador);
+    const operadorPublico = this.#perfilPublico(operador);
+    const token = jwt.sign(
+      {
+        idOperador: operador.idOperador,
+        email: operador.email,
+        rol: operador.rol,
+      },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES }
+    );
+
+    return { token, operador: operadorPublico };
   }
 
   async obtenerOperadores() {
