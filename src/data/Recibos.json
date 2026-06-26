@@ -1,30 +1,32 @@
 [
-    {
-        "idRecibo": 1,
-        "idCliente": 1,
-        "nroRecibo": "R001",
-        "monto": 120000,
-        "medioDePago": "Efectivo",
-        "fechaRecibo": "2026-03-13",
-        "fechaAcreditacion": "2026-03-12"
-    },
-    {
-        "idRecibo": 2,
-        "idCliente": 2,
-        "nroRecibo": "R002",
-        "monto": 932920,
-        "medioDePago": "Transferencia",
-        "fechaRecibo": "2026-03-13",
-        "fechaAcreditacion": "2026-03-13"
-    },
-    {
-        "idRecibo": 3,
-        "idCliente": 3,
-        "nroRecibo": "R003",
-        "monto": 226000,
-        "medioDePago": "Tarjeta de Crédito",
-        "fechaRecibo": "2026-03-22",
-        "fechaAcreditacion": "2026-03-25"
-    }
-
+  {
+    "idRecibo": 1,
+    "idFacturaVenta": 1,
+    "idCliente": 1,
+    "nroRecibo": "R001",
+    "monto": 120000,
+    "medioDePago": "Efectivo",
+    "fechaRecibo": "2026-03-13",
+    "fechaAcreditacion": "2026-03-12"
+  },
+  {
+    "idRecibo": 2,
+    "idFacturaVenta": 2,
+    "idCliente": 2,
+    "nroRecibo": "R002",
+    "monto": 932920,
+    "medioDePago": "Transferencia",
+    "fechaRecibo": "2026-03-13",
+    "fechaAcreditacion": "2026-03-13"
+  },
+  {
+    "idRecibo": 3,
+    "idFacturaVenta": 3,
+    "idCliente": 3,
+    "nroRecibo": "R003",
+    "monto": 226000,
+    "medioDePago": "Tarjeta de Crédito",
+    "fechaRecibo": "2026-03-22",
+    "fechaAcreditacion": "2026-03-25"
+  }
 ]

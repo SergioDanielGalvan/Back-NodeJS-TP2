@@ -132,10 +132,9 @@ const PASOS = [
   { modelo: Producto, archivo: "Productos.json", map: tProducto },
   { modelo: FacturaVenta, archivo: "FacturaVentas.json", map: tFacturaVenta },
   { modelo: DetalleVenta, archivo: "DetalleVentas.json", map: tDetalleVenta },
-  { modelo: Recibo, archivo: "Recibos.json", map: sinCambios },
 ];
 
-const TODOS_LOS_MODELOS = [...PASOS.map((p) => p.modelo), Operador];
+const TODOS_LOS_MODELOS = [...PASOS.map((p) => p.modelo), Operador, Recibo];
 
 // ---------------------------------------------------------------------------
 // Chequeo de integridad / contable (informativo, no aborta la migración)
@@ -170,6 +169,26 @@ async function verificarIntegridad() {
       ? "  Lotes con Maestro: OK"
       : `  Lotes huérfanos (sin Maestro): ${huerfanos.map((l) => l.idLote).join(", ")} ⚠️`
   );
+
+  // 3. Recibos: ¿lo pagado por factura cierra contra el total? (no debe excederlo)
+  const recibos = await Recibo.find().lean();
+  const pagadoPorFactura = {};
+  for (const r of recibos) {
+    if (r.idFacturaVenta == null) continue;
+    pagadoPorFactura[r.idFacturaVenta] =
+      (pagadoPorFactura[r.idFacturaVenta] || 0) + (r.monto || 0);
+  }
+  for (const f of facturas) {
+    const pagado = pagadoPorFactura[f.idFacturaVenta] || 0;
+    const pendiente = f.montoTotal - pagado;
+    let estado = "OK";
+    if (pagado > f.montoTotal) estado = "SOBREPAGADA ⚠️";
+    else if (pendiente === 0) estado = "OK (cancelada)";
+    else estado = `pendiente ${pendiente}`;
+    console.log(
+      `  Factura ${f.idFacturaVenta}: total=${f.montoTotal} pagado=${pagado} -> ${estado}`
+    );
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -208,6 +227,26 @@ async function migrar() {
     const resOp = await Operador.insertMany(operadores, { ordered: false });
     const avisoOp = resOp.length !== operadores.length ? `  ⚠️ se descartaron ${operadores.length - resOp.length}` : "";
     console.log(`✅ ${"Operador".padEnd(15)} ${String(resOp.length).padStart(3)}/${operadores.length} docs  (Operadores.json)${avisoOp}`);
+
+    // Recibos: backfill de idFacturaVenta a partir del cliente.
+    // En el seed hay 1 factura de venta por cliente, así que el mapeo es unívoco.
+    const recibosRaw = await leerJSON("Recibos.json");
+    const facturas = await FacturaVenta.find().select("idFacturaVenta idCliente").lean();
+    const facturasPorCliente = new Map();
+    for (const f of facturas) {
+      if (!facturasPorCliente.has(f.idCliente)) facturasPorCliente.set(f.idCliente, []);
+      facturasPorCliente.get(f.idCliente).push(f.idFacturaVenta);
+    }
+    const recibos = recibosRaw.map((r) => {
+      const fv = facturasPorCliente.get(r.idCliente) || [];
+      return { ...r, idFacturaVenta: fv.length === 1 ? fv[0] : undefined };
+    });
+    const resRec = await Recibo.insertMany(recibos, { ordered: false });
+    const sinFactura = recibos.filter((r) => r.idFacturaVenta == null).length;
+    const avisoRec =
+      (resRec.length !== recibos.length ? `  ⚠️ se descartaron ${recibos.length - resRec.length}` : "") +
+      (sinFactura ? `  ⚠️ ${sinFactura} sin idFacturaVenta` : "");
+    console.log(`✅ ${"Recibo".padEnd(15)} ${String(resRec.length).padStart(3)}/${recibos.length} docs  (Recibos.json)${avisoRec}`);
 
     await verificarIntegridad();
 
