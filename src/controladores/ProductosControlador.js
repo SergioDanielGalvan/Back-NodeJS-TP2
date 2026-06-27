@@ -1,6 +1,11 @@
 // controllers/ProductosControlador.js
 import MaestroProducto from "../modelos/MaestroProductos.js";
-import Producto, { getSaldoLote as getSaldoLoteModel, getSaldoProducto as getSaldoProductoModel } from "../modelos/Productos.js";
+import Producto, {
+  getSaldoLote as getSaldoLoteModel,
+  getSaldoProducto as getSaldoProductoModel,
+  getProductosPorVencer,
+  getReporteReposicion
+} from "../modelos/Productos.js";
 import DetalleVenta from "../modelos/DetalleVenta.js";
 
 // Total vendido por lote (desde DetalleVenta). Si se pasan idLotes, filtra.
@@ -327,6 +332,36 @@ export const getLotesPorProducto = async (req, res) => {
     }));
 
     res.status(200).json(resultado);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// --------------------------------------------------------------
+// Obtener lista de lotes por vencimiento dentro de un rango de días
+// --------------------------------------------------------------
+export const getProductosPorVencimiento = async (req, res) => {
+  try {
+    const dias = Number(req.params.dias);
+    if (!Number.isFinite(dias) || dias < 0) {
+      return res.status(400).json({ error: "El parámetro 'dias' debe ser un número >= 0" });
+    }
+    const lotes = await getProductosPorVencer(dias);
+    res.status(200).json(lotes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// --------------------------------------------------------------
+// Obtener lista de lotes con bajo stock y dentro del punto de reposición
+// --------------------------------------------------------------
+export const getReporteStock = async (req, res) => {
+  try {
+    const reporte = await getReporteReposicion();
+    res.status(200).json(reporte);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });

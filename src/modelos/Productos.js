@@ -175,4 +175,84 @@ export async function getListaLotesDisponibles(idProducto, fecha) {
   }));
 }
 
+// Lotes que vencen dentro de los próximos `dias` días, con saldo disponible (FEFO).
+export async function getProductosPorVencer(dias) {
+  const hoy = new Date();
+  const limite = new Date();
+  limite.setDate(limite.getDate() + Number(dias));
+
+  const lotes = await Producto.find({
+    FechaVencimiento: { $gte: hoy, $lte: limite },
+  })
+    .sort({ FechaVencimiento: 1 })
+    .lean();
+
+  if (lotes.length === 0) return [];
+
+  // Saldo por lote (stock - vendido) y nombre del producto
+  const mapaVentas = await ventasPorLote(lotes.map((l) => l.idLote));
+  const maestros = await MaestroProducto.find({
+    idProducto: { $in: [...new Set(lotes.map((l) => l.idProducto))] },
+  })
+    .select("idProducto nombre")
+    .lean();
+  const nombre = {};
+  for (const m of maestros) nombre[m.idProducto] = m.nombre;
+
+  return lotes
+    .map((l) => ({
+      idLote: l.idLote,
+      idProducto: l.idProducto,
+      nombreProducto: nombre[l.idProducto] ?? null,
+      saldo: l.stock - (mapaVentas.get(l.idLote) || 0),
+      fechaVencimiento: l.FechaVencimiento,
+      diasParaVencer: Math.ceil((new Date(l.FechaVencimiento) - hoy) / 86400000),
+    }))
+    .filter((l) => l.saldo > 0); // solo lotes con stock real
+}
+
+// Reporte de reposición: clasifica cada producto por su saldo total vs stockMinimo y puntoPedido.
+export async function getReporteReposicion() {
+  const [maestro, productos, mapaVentas] = await Promise.all([
+    MaestroProducto.find().lean(),
+    Producto.find().select("idLote idProducto stock").lean(),
+    ventasPorLote(),
+  ]);
+
+  // Saldo total por producto (suma de saldos de sus lotes)
+  const saldoPorProducto = {};
+  for (const lote of productos) {
+    const saldo = lote.stock - (mapaVentas.get(lote.idLote) || 0);
+    saldoPorProducto[lote.idProducto] = (saldoPorProducto[lote.idProducto] || 0) + saldo;
+  }
+
+  const bajoStock = [];
+  const reposicion = [];
+
+  for (const p of maestro) {
+    const saldo = saldoPorProducto[p.idProducto] || 0;
+    const stockMinimo = p.stockMinimo || 0;
+    const puntoPedido = p.puntoPedido || 0;
+
+    const item = {
+      idProducto: p.idProducto,
+      nombre: p.nombre,
+      saldo,
+      stockMinimo,
+      puntoPedido,
+    };
+
+    if (saldo < stockMinimo) {
+      bajoStock.push({ ...item, faltante: stockMinimo - saldo });
+    } else if (saldo <= puntoPedido) {
+      reposicion.push({ ...item, sugeridoReponer: puntoPedido - saldo });
+    }
+  }
+
+  return {
+    bajoStock: { cantidad: bajoStock.length, items: bajoStock },
+    reposicion: { cantidad: reposicion.length, items: reposicion },
+  };
+}
+
 export default Producto;

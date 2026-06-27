@@ -17,6 +17,8 @@ import {
   getResumenStockPorProducto,
   getDetalleStockPorProducto,
   getLotesPorProducto,
+  getProductosPorVencimiento,
+  getReporteStock,
   updateProductoWithPrecio,
   updateProductoWithStock,
 } from "../controladores/ProductosControlador.js";
@@ -32,9 +34,13 @@ router.get("/saldo/producto/:idProducto", getSaldoProducto);
 router.get("/stock/resumen", getResumenStockPorProducto);
 router.get("/stock/detalle/:idProducto", getDetalleStockPorProducto);
 router.get("/stock/:idProducto/lotes", getLotesPorProducto);
+//router.get("/vencimiento/:dias", getProductosPorVencimiento);
+router.get("/reporte/reposicion", getReporteStock);
 
 // Rutas de productos Privadas (requieren token)
 router.post("/", verificarToken, createProducto);
+router.get("/vencimiento/:dias", verificarToken, getProductosPorVencimiento);
+//router.get("/reporte/reposicion", verificarToken, getReporteStock);
 
 // Privada y Admin
 router.delete("/:id", verificarToken, deleteProductoById);
