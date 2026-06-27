@@ -1,4 +1,5 @@
 // app.js
+import "dotenv/config";
 import express from "express";
 import methodOverride from "method-override";
 import path from "path";
@@ -34,6 +35,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "src")));
 app.use(methodOverride("_method"));
 
+// Asegura la conexión a Mongo antes de atender cada request (serverless-safe).
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Rutas
 app.get("/", (req, res) => {
   res.render("index", { titulo: "TodoStock S.A." });
@@ -52,9 +63,12 @@ app.use((req, res) => {
   res.status(404).render("404", { titulo: "Página no encontrada" });
 });
 
-connectDB();
-
+// En local levanta el servidor; en Vercel se exporta la app (serverless).
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () =>
-  console.log(`Servidor corriendo en http://localhost:${PORT}`),
-);
+if (!process.env.VERCEL) {
+  app.listen(PORT, () =>
+    console.log(`Servidor corriendo en http://localhost:${PORT}`),
+  );
+}
+
+export default app;

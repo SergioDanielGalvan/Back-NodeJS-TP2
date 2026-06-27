@@ -9,7 +9,6 @@
 // Cada colección tiene una función de transformación que reconcilia los
 // nombres de campo del JSON con los del schema (ej: stockminimo -> stockMinimo).
 // ---------------------------------------------------------------------------
-import "dotenv/config";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import fs from "fs/promises";
@@ -197,9 +196,7 @@ async function verificarIntegridad() {
 // ---------------------------------------------------------------------------
 async function migrar() {
   try {
-    await mongoose.connect(MONGO_URI, {
-      dbName: process.env.MONGODB_DB || "TP2-IFTS29",
-    });
+    await mongoose.connect(MONGO_URI);
     console.log(`🟢 Conectado a ${MONGO_URI}`);
 
     if (FORCE) {
@@ -242,12 +239,7 @@ async function migrar() {
     }
     const recibos = recibosRaw.map((r) => {
       const fv = facturasPorCliente.get(r.idCliente) || [];
-      // Usa el idFacturaVenta del JSON si viene; si no, lo deduce por cliente
-      // (en el seed hay 1 factura por cliente, así que es unívoco).
-      return {
-        ...r,
-        idFacturaVenta: r.idFacturaVenta ?? (fv.length === 1 ? fv[0] : undefined),
-      };
+      return { ...r, idFacturaVenta: fv.length === 1 ? fv[0] : undefined };
     });
     const resRec = await Recibo.insertMany(recibos, { ordered: false });
     const sinFactura = recibos.filter((r) => r.idFacturaVenta == null).length;
