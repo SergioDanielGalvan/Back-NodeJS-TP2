@@ -34,3 +34,16 @@ export const getVentaById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Emite/imprime la factura con su cabecera fiscal y el detalle de líneas.
+export const emitirFactura = async (req, res) => {
+  try {
+    const factura = await ventasService.emitirFactura(req.params.id);
+    if (!factura) {
+      return res.status(404).json({ error: "Factura de venta no encontrada" });
+    }
+    res.json(factura);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

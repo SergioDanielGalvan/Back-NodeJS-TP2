@@ -1,8 +1,11 @@
 // servicios/VentasService.js
 import Cliente from "../modelos/Cliente.js";
+import MaestroProducto from "../modelos/MaestroProductos.js";
 import FacturaVenta from "../modelos/FacturaVenta.js";
 import DetalleVenta from "../modelos/DetalleVenta.js";
 import { getListaLotesDisponibles } from "../modelos/Productos.js";
+
+const ALICUOTA_IVA = 0.21;
 
 async function proximoId(Modelo, campo) {
   const ultimo = await Modelo.findOne().sort(`-${campo}`).select(campo).lean();
@@ -125,6 +128,48 @@ class VentasService {
     if (!factura) return null;
     const detalles = await DetalleVenta.find({ idFacturaVenta }).lean();
     return { ...factura, detalles };
+  }
+
+  // Emite/imprime una factura: cabecera fiscal + líneas con nombre de producto.
+  async emitirFactura(id) {
+    const idFacturaVenta = Number(id);
+    const factura = await FacturaVenta.findOne({ idFacturaVenta }).lean();
+    if (!factura) return null;
+
+    const cliente = await Cliente.obtenerPorId(factura.idCliente);
+    const detalles = await DetalleVenta.find({ idFacturaVenta }).lean();
+
+    // Nombre de producto desde el maestro (una sola consulta)
+    const idsProducto = [...new Set(detalles.map((d) => d.idProducto))];
+    const maestros = await MaestroProducto.find({
+      idProducto: { $in: idsProducto },
+    })
+      .select("idProducto nombre")
+      .lean();
+    const nombrePorProducto = {};
+    for (const m of maestros) nombrePorProducto[m.idProducto] = m.nombre;
+
+    const montoTotal = factura.montoTotal;
+    const iva = Math.round(montoTotal * ALICUOTA_IVA * 100) / 100;
+
+    return {
+      nroFactura: factura.nroFactura,
+      cliente: {
+        cuit: cliente?.nroCUIT ?? null,
+        nombre: cliente?.nombre ?? null,
+      },
+      fechaFactura: factura.fechaFactura,
+      letraComprobante: factura.letraComprobante,
+      tipoComprobante: factura.tipoComprobante,
+      iva,
+      montoTotal,
+      detalles: detalles.map((d) => ({
+        nombreProducto: nombrePorProducto[d.idProducto] ?? null,
+        cantidad: d.cantidad,
+        precioUnitario: d.precioUnitario,
+        precioTotal: d.montoTotal,
+      })),
+    };
   }
 }
 
