@@ -2,9 +2,11 @@
 import "dotenv/config";
 import express from "express";
 import methodOverride from "method-override";
+import cookieParser from "cookie-parser";                       // ⬅️ NUEVO
 import path from "path";
 import { fileURLToPath } from "url";
 import { connectDB } from "./src/config/mongodb.js";
+import { cargarOperador } from "./src/middlewares/auth.js";     // ⬅️ NUEVO
 import maestroProductosRouter from "./src/rutas/MaestroProductosRouter.js";
 import maestroProductosRouterViews from "./src/rutas/MaestroProductosRouterViews.js";
 import productosRouter from "./src/rutas/ProductosRouter.js";
@@ -12,6 +14,7 @@ import operadoresRouter from "./src/rutas/OperadoresRouter.js";
 import comprasRouter from "./src/rutas/ComprasRouter.js";
 import ventasRouter from "./src/rutas/VentasRouter.js";
 import recibosRouter from "./src/rutas/RecibosRouter.js";
+import vistasRouter from "./src/rutas/VistasRouter.js";         // ⬅️ NUEVO
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,6 +37,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "src")));
 app.use(methodOverride("_method"));
+app.use(cookieParser());                                        // ⬅️ NUEVO: lee req.cookies
+app.use(cargarOperador);                                        // ⬅️ NUEVO: res.locals.operador en todas las vistas
 
 // Asegura la conexión a Mongo antes de atender cada request (serverless-safe).
 app.use(async (req, res, next) => {
@@ -57,6 +62,7 @@ app.use("/api/recibos", recibosRouter);
 app.use("/api/productos", productosRouter);
 app.use("/api/maestroproductos", maestroProductosRouter);
 app.use("/maestroproductos", maestroProductosRouterViews);
+app.use("/", vistasRouter);                                     // ⬅️ NUEVO: login, logout, consultas
 
 // Manejo de errores 404
 app.use((req, res) => {
