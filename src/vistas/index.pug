@@ -1,11 +1,10 @@
-doctype html
-html
-  head
-    title TodoStock S.A.
-  body
-    h1= titulo
-    p Bienvenido al sistema de gestión de TodoStock S.A.
-    nav
-      ul
-        li: a(href="/maestroproductos") Gestión de Maestro de Productos
-        li: a(href="/api/maestroproductos") Ver API (JSON)
+extends layout
+block contenido
+  h1 TodoStock
+  p Sistema de gestión de stock.
+  if operador
+    p Estás logeado. Usá el menú para gestionar compras, ventas, stock y reportes.
+  else
+    p.
+      Podés #[a(href="/consultas/stock") consultar el stock] sin registrarte,
+      o #[a(href="/login") ingresar] para gestionar.

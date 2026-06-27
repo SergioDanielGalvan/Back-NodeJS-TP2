@@ -1,0 +1,15 @@
+extends layout
+block contenido
+  h1 Ingresar
+  if error
+    p.error= error
+  form(method="POST", action="/login")
+    label
+      | Usuario
+      input(type="text", name="usuario", required)
+    label
+      | Clave
+      input(type="password", name="clave", required)
+    button(type="submit") Ingresar
+  p.
+    ¿Solo querés mirar? #[a(href="/consultas/stock") Consultá el stock sin registrarte]
