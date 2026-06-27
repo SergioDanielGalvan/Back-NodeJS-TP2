@@ -9,12 +9,14 @@ block contenido
         tr
           th ID
           th Producto
-          th Saldo
+          th Saldo total
+          th Lotes
       tbody
         each p in productos
           tr
-            td= p.id
+            td= p.idProducto
             td= p.nombre
-            td= p.saldo
+            td= p.saldoTotal
+            td= p.cantidadLotes
   else
     p No hay productos para mostrar.

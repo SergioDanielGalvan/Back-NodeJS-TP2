@@ -1,16 +1,13 @@
-// routes/vistas.js
+// src/rutas/vistas.js
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/jwt.js";
 
-import Operador from "../models/Operador.js";                  // ⬅️ tu modelo
-import { obtenerStock } from "../services/ProductosService.js"; // ⬅️ tu agregación de saldo
+import Operador from "../modelos/Operador.js";
+import { obtenerResumenStock } from "../controladores/ProductosControlador.js";  // ⬅️
 
 const router = express.Router();
-
-// Landing
-router.get("/", (req, res) => res.render("index"));
 
 // --- Login ---
 router.get("/login", (req, res) => res.render("login", { error: null }));
@@ -18,7 +15,7 @@ router.get("/login", (req, res) => res.render("login", { error: null }));
 router.post("/login", async (req, res) => {
   const { usuario, clave } = req.body;
   try {
-    const op = await Operador.findOne({ usuario });            // ⬅️ campo de login real
+    const op = await Operador.findOne({ usuario });
     if (!op || !(await bcrypt.compare(clave, op.claveHash))) {
       return res.render("login", { error: "Usuario o clave incorrectos" });
     }
@@ -48,7 +45,7 @@ router.get("/logout", (req, res) => {
 // --- Consultas públicas (sin login) ---
 router.get("/consultas/stock", async (req, res) => {
   try {
-    const productos = await obtenerStock();                    // ⬅️ tu función existente
+    const productos = await obtenerResumenStock();   // ⬅️ función que devuelve datos
     res.render("consultas/stock", { productos, error: null });
   } catch (err) {
     console.error("Error al consultar stock:", err);

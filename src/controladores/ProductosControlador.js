@@ -232,27 +232,7 @@ export const getSaldoProducto = async (req, res) => {
 // --------------------------------------------------------------
 export const getResumenStockPorProducto = async (req, res) => {
   try {
-    const productos = await Producto.find().lean();
-    const ventasPorLote = await ventasPorLoteMap();
-
-    // Acumular por producto
-    const resumen = {};
-    for (const lote of productos) {
-      const saldoLote = lote.stock - (ventasPorLote[lote.idLote] || 0);
-      if (!resumen[lote.idProducto]) {
-        resumen[lote.idProducto] = {
-          idProducto: lote.idProducto,
-          cantidad: 0,
-          saldoTotal: 0,
-          cantidadLotes: 0
-        };
-      }
-      resumen[lote.idProducto].saldoTotal += saldoLote;
-      resumen[lote.idProducto].cantidad += lote.stock;
-      resumen[lote.idProducto].cantidadLotes += 1;
-    }
-
-    res.status(200).json(Object.values(resumen));
+    res.status(200).json(await obtenerResumenStock());
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
@@ -366,6 +346,39 @@ export const getReporteStock = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: error.message });
   }
+};
+
+// --------------------------------------------------------------
+// Resumen de stock por producto CON nombre del maestro.
+// Devuelve datos (no escribe en res) para poder reusarse en vistas Pug.
+// --------------------------------------------------------------
+export const obtenerResumenStock = async () => {
+  const productos = await Producto.find().lean();
+  const ventasPorLote = await ventasPorLoteMap();
+
+  // Acumular saldo por idProducto
+  const resumen = {};
+  for (const lote of productos) {
+    const saldoLote = lote.stock - (ventasPorLote[lote.idLote] || 0);
+    if (!resumen[lote.idProducto]) {
+      resumen[lote.idProducto] = {
+        idProducto: lote.idProducto,
+        saldoTotal: 0,
+        cantidadLotes: 0,
+      };
+    }
+    resumen[lote.idProducto].saldoTotal += saldoLote;
+    resumen[lote.idProducto].cantidadLotes += 1;
+  }
+
+  // Cruzar con el maestro para traer el nombre
+  const productosMaestro = await MaestroProducto.obtenerTodos();
+  const mapaMaestro = new Map(productosMaestro.map(p => [p.idProducto, p]));
+
+  return Object.values(resumen).map(r => ({
+    ...r,
+    nombre: mapaMaestro.get(r.idProducto)?.nombre || "(sin nombre)",
+  }));
 };
 
 // --------------------------------------------------------------
