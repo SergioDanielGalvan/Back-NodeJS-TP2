@@ -1,8 +1,7 @@
 // config/mongodb.js
 import mongoose from "mongoose";
 
-const MONGO_URI =
-  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/TP2-IFTS29";
+const MONGO_URI = URI || "mongodb://127.0.0.1:27017/TP2-IFTS29";
 const DB_NAME = process.env.MONGODB_DB || "TP2-IFTS29";
 
 // Cache de conexión para entornos serverless (Vercel): reutiliza la conexión
