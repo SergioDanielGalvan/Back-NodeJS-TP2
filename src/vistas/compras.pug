@@ -1,0 +1,352 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Cargar Compra Completa - TodoStock
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css")
+    style.
+      body { background-color: #f8f9fa; }
+      .navbar-custom { background-color: #0f172a; }
+      .card-form { max-width: 750px; margin: 30px auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+      .sugerencias-lista { position: absolute; z-index: 1000; width: 100%; max-height: 180px; overflow-y: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+      .card-historial { max-width: 1100px; margin: 20px auto 50px auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+  body
+    //- 📊 BARRA DE NAVEGACIÓN UNIFICADA
+    nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.px-4
+      div.container-fluid
+        a.navbar-brand.fw-bold(href="/") TodoStock
+        div.navbar-nav.ms-auto.align-items-center
+          a.nav-link(href="/consultas/stock") Consultar stock
+          a.nav-link.active(href="/compras") Compras
+          a.nav-link(href="/ventas") Ventas
+          a.nav-link(href="/stock") Stock
+          a.nav-link(href="/reportes") Reportes
+          span.nav-item.nav-link.text-light.mx-2 Hola, Administrador Local
+          a.nav-link.btn.btn-outline-light.btn-sm.px-3.ms-2(href="/logout") Salir
+
+    div.container
+      //- Formulario de Carga
+      div.card.card-form.bg-white
+        div.card-header.bg-primary.text-white.text-center.py-3(style="border-radius: 12px 12px 0 0;")
+          h3.mb-0 Registrar Compra
+
+        div.card-body.p-4
+          form#formCompra
+            
+            h5.text-secondary.border-bottom.pb-2 Datos del Comprobante
+            div.row.mb-3
+              div.col-md-6
+                label.form-label(for="nroFactura") Nro Factura / Comprobante
+                input#nroFactura.form-control(type="number" name="nroFactura" placeholder="Ej: 4545" required)
+              
+              div.col-md-6.position-relative
+                label.form-label(for="buscarProveedor") Buscar Proveedor (Nombre, Razón Social o ID)
+                input#buscarProveedor.form-control(type="text" placeholder="Ej: Thames o Morón..." autocomplete="off" required)
+                div#sugerenciasProveedores.list-group.sugerencias-lista.d-none
+                input#idProveedor(type="hidden" name="idProveedor")
+            
+            div.row.mb-4
+              div.col-md-12
+                label.form-label(for="fechaFactura") Fecha de Compra
+                input#fechaFactura.form-control(type="date" name="fechaFactura" required)
+
+            h5.text-secondary.border-bottom.pb-2 Detalle del Producto (Ítem 1)
+            div.row.mb-3
+              div.col-md-12.position-relative.mb-3
+                label.form-label(for="buscarProducto") Buscar Producto (Nombre, Descripción o ID)
+                input#buscarProducto.form-control(type="text" placeholder="Escribí nombre o el número de ID..." autocomplete="off" required)
+                div#sugerenciasProductos.list-group.sugerencias-lista.d-none
+                input#idProducto(type="hidden" name="items[0][idProducto]")
+
+            div.row.mb-3
+              div.col-md-4
+                label.form-label(for="cantidad") Cantidad
+                input#cantidad.form-control(type="number" name="items[0][cantidad]" placeholder="Ej: 50" required)
+              div.col-md-4
+                label.form-label(for="precioUnitario") Precio Unitario ($)
+                input#precioUnitario.form-control(type="number" step="0.01" name="items[0][precioUnitario]" placeholder="Ej: 1500" required)
+              div.col-md-4
+                label.form-label(for="unidadmedida") Unidad de Medida
+                select#unidadmedida.form-select(name="items[0][unidadmedida]")
+                  option(value="unidades" selected) Unidades
+                  option(value="litros") Litros
+                  option(value="kilos") Kilos
+
+            //- 🚨 PANEL DE DETALLE DE ERRORES / DATOS FALTANTES
+            div#alertErrores.alert.alert-danger.d-none.fw-semibold.mb-3
+
+            div.alert.alert-secondary.text-end.fw-bold.fs-5.py-2.mb-4
+              span Total Operación: $
+              span#lblTotal 0.00
+
+            hr.my-4
+            
+            div.d-flex.justify-content-between
+              a.btn.btn-secondary(href="/") Cancelar
+              button.btn.btn-success.px-4(type="submit") Procesar Carga Completa
+
+      //- Historial Limitado a los últimos 10 ordenados por novedades
+      div.card.card-historial.bg-white
+        div.card-header.bg-dark.text-white.py-3
+          h5.mb-0 📋 Últimos 10 Comprobantes Registrados
+        div.card-body.p-3
+          div.table-responsive
+            table.table.table-striped.table-hover.align-middle.mb-0
+              thead.table-light
+                tr
+                  th ID Factura
+                  th Nro Factura
+                  th Proveedor
+                  th Producto Detalle
+                  th Fecha
+                  th Monto Total
+                  th Operador
+              tbody#tablaHistorialCompras
+                tr
+                  td.text-center.text-muted(colspan="7") Cargando historial de la base de datos...
+
+    script.
+      let productosMaestro = [];
+      
+      const proveedoresMaestro = [
+        { idProveedor: 10, nombre: "Casa Thames S.A.", razonSocial: "Casa Thames S.A." },
+        { idProveedor: 11, nombre: "Química Morón S.R.L.", razonSocial: "Química Morón S.R.L." },
+        { idProveedor: 12, nombre: "Distribuidora Fénix", razonSocial: "Distribuidora Fénix" },
+        { idProveedor: 13, nombre: "Distribuidora Polar", razonSocial: "Distribuidora Polar" }
+      ];
+
+      // 📜 Función para renderizar el Historial (Últimos 10, arriba el nuevo)
+      async function cargarHistorial() {
+        try {
+          const resHistorial = await fetch('/api/compras');
+          if (resHistorial.ok) {
+            let historial = await resHistorial.json();
+            const bodyHistorial = document.getElementById('tablaHistorialCompras');
+            
+            if (historial.length === 0) {
+              bodyHistorial.innerHTML = '<tr><td colspan="7" class="text-center text-muted">No hay compras registradas</td></tr>';
+              return;
+            }
+
+            historial.sort((a, b) => parseInt(b.idFacturaCompra) - parseInt(a.idFacturaCompra));
+            const ultimos10 = historial.slice(0, 10);
+
+            let filasHTML = '';
+            for (const c of ultimos10) {
+              let nombreProductoFinal = 'Ver Detalle';
+              let idProductoMapeado = '---';
+
+              // 🏢 Cruzar e inyectar el nombre del proveedor de forma robusta
+              const matchProv = proveedoresMaestro.find(p => p.idProveedor == c.idProveedor);
+              const proveedorTexto = matchProv ? `[${c.idProveedor}] ${matchProv.nombre}` : `ID: ${c.idProveedor}`;
+
+              try {
+                const resDetalle = await fetch(`/api/compras/${c.idFacturaCompra}`);
+                if (resDetalle.ok) {
+                  const compraCompleta = await resDetalle.json();
+                  const primerItem = compraCompleta.detalles?.[0] || compraCompleta.items?.[0];
+                  if (primerItem) {
+                    idProductoMapeado = primerItem.idProducto;
+                    const matchProd = productosMaestro.find(p => p.idProducto == idProductoMapeado);
+                    if (matchProd) nombreProductoFinal = `[${idProductoMapeado}] ${matchProd.nombre || matchProd.descripcion}`;
+                    else nombreProductoFinal = `[${idProductoMapeado}] Artículo Desconocido`;
+                  }
+                }
+              } catch (errDetalle) {
+                let idProdBuscar = c.idProducto || (c.items && c.items[0]?.idProducto);
+                if (idProdBuscar) {
+                  idProductoMapeado = idProdBuscar;
+                  const matchProd = productosMaestro.find(p => p.idProducto == idProdBuscar);
+                  if (matchProd) nombreProductoFinal = `[${idProdBuscar}] ${matchProd.nombre || matchProd.descripcion}`;
+                  else nombreProductoFinal = `[${idProdBuscar}] Artículo Desconocido`;
+                }
+              }
+
+              // Si fallaron los cruces profundos pero tenemos datos parciales, forzamos un formato decente
+              if (nombreProductoFinal === 'Ver Detalle' && idProductoMapeado !== '---') {
+                nombreProductoFinal = `[${idProductoMapeado}] Ver Detalle`;
+              }
+
+              filasHTML += `
+                <tr>
+                  <td><span class="badge bg-secondary">${c.idFacturaCompra}</span></td>
+                  <td class="fw-bold">${c.nroFactura}</td>
+                  <td class="text-dark fw-semibold">${proveedorTexto}</td>
+                  <td class="fw-semibold text-primary">${nombreProductoFinal}</td>
+                  <td>${new Date(c.fechaFactura).toLocaleDateString('es-AR')}</td>
+                  <td class="text-success fw-bold">$${parseFloat(c.montoTotal).toLocaleString('es-AR')}</td>
+                  <td><em>${c.operador || 'sistema'}</em></td>
+                </tr>
+              `;
+            }
+            bodyHistorial.innerHTML = filasHTML;
+          }
+        } catch (e) { console.error("Error cargando historial:", e); }
+      }
+
+      // Inicialización de la pantalla
+      async function inicializarPantalla() {
+        try {
+          const resProd = await fetch('/api/maestroproductos');
+          if (resProd.ok) productosMaestro = await resProd.json();
+          await cargarHistorial();
+        } catch (e) { console.error("Error al conectar con MongoDB:", e); }
+      }
+
+      // Interceptar Formulario con Validación de Faltantes Estricta
+      document.getElementById('formCompra').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const form = e.target;
+        const alertErrores = document.getElementById('alertErrores');
+        const inputBuscarProv = document.getElementById('buscarProveedor');
+        const inputBuscarProd = document.getElementById('buscarProducto');
+        
+        const idProv = document.getElementById('idProveedor').value;
+        const idProd = document.getElementById('idProducto').value;
+
+        // Ocultar alertas anteriores y limpiar estilos
+        alertErrores.classList.add('d-none');
+        alertErrores.innerHTML = '';
+        inputBuscarProv.classList.remove('is-invalid');
+        inputBuscarProd.classList.remove('is-invalid');
+
+        // 🚨 VALIDACIÓN: Detallar exactamente cuál es el dato que falta seleccionar
+        let errores = [];
+        if (!idProv) {
+          errores.push("Falta seleccionar un <strong>Proveedor válido</strong> de la lista desplegable.");
+          inputBuscarProv.classList.add('is-invalid');
+        }
+        if (!idProd) {
+          errores.push("Falta seleccionar un <strong>Producto válido</strong> de la lista desplegable.");
+          inputBuscarProd.classList.add('is-invalid');
+        }
+
+        if (errores.length > 0) {
+          alertErrores.innerHTML = `⚠️ No se puede procesar la carga:<br><ul class="mb-0 mt-1">${errores.map(err => `<li>${err}</li>`).join('')}</ul>`;
+          alertErrores.classList.remove('d-none');
+          alertErrores.scrollIntoView({ behavior: 'smooth' });
+          return; // Frena por completo la ejecución
+        }
+
+        const formData = {
+          nroFactura: document.getElementById('nroFactura').value,
+          idProveedor: idProv,
+          fechaFactura: document.getElementById('fechaFactura').value,
+          items: [{
+            idProducto: idProd,
+            cantidad: document.getElementById('cantidad').value,
+            precioUnitario: document.getElementById('precioUnitario').value,
+            unidadmedida: document.getElementById('unidadmedida').value
+          }]
+        };
+
+        try {
+          const respuesta = await fetch('/api/compras', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+          });
+
+          if (respuesta.ok) {
+            alert('¡Compra registrada con éxito en MongoDB!');
+            form.reset();
+            document.getElementById('lblTotal').innerText = '0.00';
+            await cargarHistorial();
+          } else {
+            const errorData = await respuesta.json().catch(() => ({}));
+            alert('Error al registrar en el servidor: ' + (errorData.message || 'Verificar campos'));
+          }
+        } catch (err) {
+          console.error("Error de red:", err);
+          alert('Error de conexión al procesar la compra.');
+        }
+      });
+
+      // Buscador de Proveedores
+      const inputBuscarProv = document.getElementById('buscarProveedor');
+      const inputOcultoProvId = document.getElementById('idProveedor');
+      const contenedorProv = document.getElementById('sugerenciasProveedores');
+
+      inputBuscarProv.addEventListener('input', () => {
+        const texto = inputBuscarProv.value.trim().toLowerCase();
+        contenedorProv.innerHTML = '';
+        if (!texto) { inputOcultoProvId.value = ''; contenedorProv.classList.add('d-none'); return; }
+
+        const coincidencias = proveedoresMaestro.filter(p => {
+          return (p.nombre || '').toLowerCase().includes(texto) || (p.idProveedor || '').toString().includes(texto);
+        });
+
+        if (coincidencias.length === 0) { inputOcultoProvId.value = ''; contenedorProv.classList.add('d-none'); return; }
+
+        coincidencias.forEach(p => {
+          const nombreAMostrar = p.nombre;
+          const boton = document.createElement('button');
+          boton.type = 'button';
+          boton.className = 'list-group-item list-group-item-action py-2';
+          boton.innerHTML = `<span class="badge bg-dark me-2">ID: ${p.idProveedor}</span> ${nombreAMostrar}`;
+          boton.addEventListener('click', () => {
+            inputBuscarProv.value = nombreAMostrar;
+            inputOcultoProvId.value = p.idProveedor;
+            inputBuscarProv.classList.remove('is-invalid');
+            contenedorProv.classList.add('d-none');
+          });
+          contenedorProv.appendChild(boton);
+        });
+        contenedorProv.classList.remove('d-none');
+      });
+
+      // Buscador de Productos (Filtra por Nombre o por ID exacto/parcial)
+      const inputBuscarProd = document.getElementById('buscarProducto');
+      const inputOcultoProdId = document.getElementById('idProducto');
+      const contenedorProd = document.getElementById('sugerenciasProductos');
+
+      inputBuscarProd.addEventListener('input', () => {
+        const texto = inputBuscarProd.value.trim().toLowerCase();
+        contenedorProd.innerHTML = '';
+        if (!texto) { inputOcultoProdId.value = ''; return; }
+
+        const coincidencias = productosMaestro.filter(p => {
+          const nombre = (p.nombre || p.descripcion || '').toLowerCase();
+          const id = (p.idProducto || '').toString();
+          return nombre.includes(texto) || id === texto || id.includes(texto);
+        });
+
+        if (coincidencias.length === 0) { inputOcultoProdId.value = ''; contenedorProd.classList.add('d-none'); return; }
+
+        coincidencias.forEach(p => {
+          const nombreProd = p.nombre || p.descripcion;
+          const boton = document.createElement('button');
+          boton.type = 'button';
+          boton.className = 'list-group-item list-group-item-action py-2';
+          boton.innerHTML = `<span class="badge bg-primary me-2">ID: ${p.idProducto}</span> ${nombreProd}`;
+          boton.addEventListener('click', () => {
+            inputBuscarProd.value = nombreProd;
+            inputOcultoProdId.value = p.idProducto;
+            inputBuscarProd.classList.remove('is-invalid');
+            contenedorProd.classList.add('d-none');
+          });
+          contenedorProd.appendChild(boton);
+        });
+        contenedorProd.classList.remove('d-none');
+      });
+
+      // Cálculo de Total
+      const txtCantidad = document.getElementById('cantidad');
+      const txtPrecio = document.getElementById('precioUnitario');
+      const lblTotal = document.getElementById('lblTotal');
+
+      function calcularTotal() {
+        lblTotal.innerText = ((parseFloat(txtCantidad.value) || 0) * (parseFloat(txtPrecio.value) || 0)).toFixed(2);
+      }
+      txtCantidad.addEventListener('input', calcularTotal);
+      txtPrecio.addEventListener('input', calcularTotal);
+
+      document.addEventListener('click', (e) => {
+        if (e.target !== inputBuscarProv) contenedorProv.classList.add('d-none');
+        if (e.target !== inputBuscarProd) contenedorProd.classList.add('d-none');
+      });
+
+      window.addEventListener('DOMContentLoaded', inicializarPantalla);

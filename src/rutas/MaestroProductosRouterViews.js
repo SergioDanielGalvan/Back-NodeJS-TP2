@@ -7,6 +7,7 @@ const router = Router();
 // LISTADO
 router.get("/", async (req, res) => {
   const productos = await maestroService.obtenerCatalogo();
+  console.log("PRODUCTOS DE MONGO:", productos); // <--- AGREGÁ ESTA LÍNEA
   res.render("maestroProductos/index", { productos });
 });
 
@@ -22,7 +23,12 @@ router.get("/nuevo", (req, res) => {
 router.post("/", async (req, res) => {
   const datos = req.body;
 
-  datos.categorias = datos.categorias.split(",");
+  // 🛡️ Control defensivo: si no vienen categorías (como en el login cruzado), evita el crash
+  if (datos && datos.categorias && typeof datos.categorias === "string") {
+    datos.categorias = datos.categorias.split(",");
+  } else {
+    datos.categorias = [];
+  }
 
   await maestroService.crearProductoCatalogo(datos);
 
@@ -48,7 +54,13 @@ router.get("/:id", async (req, res) => {
 // ACTUALIZAR
 router.put("/:id", async (req, res) => {
   const datos = req.body;
-  datos.categorias = datos.categorias.split(",");
+  
+  // 🛡️ Control defensivo: evita el crash si no vienen categorías en la edición
+  if (datos && datos.categorias && typeof datos.categorias === "string") {
+    datos.categorias = datos.categorias.split(",");
+  } else {
+    datos.categorias = [];
+  }
 
   await maestroService.editarProductoCatalogo(req.params.id, datos);
 
