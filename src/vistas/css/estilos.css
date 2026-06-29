@@ -2,16 +2,286 @@
 body { font-family: system-ui, sans-serif; margin: 0; color: #1f2937; }
 .barra { display: flex; align-items: center; gap: 1rem; padding: .8rem 1.2rem;
   background: #111827; color: #fff; }
-.barra .logo { font-weight: 700; color: #fff; text-decoration: none; }
-.barra .links { display: flex; gap: 1rem; align-items: center; margin-left: auto; }
-.barra a { color: #d1d5db; text-decoration: none; }
-.barra a:hover { color: #fff; }
-.usuario { color: #9ca3af; font-size: .9rem; }
-.contenido { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
-.error { color: #b91c1c; background: #fee2e2; padding: .6rem 1rem; border-radius: 6px; }
-form label { display: block; margin: .8rem 0; }
-form input { display: block; padding: .5rem; width: 260px; margin-top: .2rem; }
-button { padding: .5rem 1.2rem; background: #2563eb; color: #fff; border: 0;
-  border-radius: 6px; cursor: pointer; }
-.tabla { width: 100%; border-collapse: collapse; }
-.tabla th, .tabla td { text-align: left; padding: .5rem .8rem; border-bottom: 1px solid #e5e7eb; }
+/* ============================================================
+   TodoStock — Hoja de estilos (consola de gestión de stock)
+   Reemplaza por completo a src/vistas/css/estilos.css
+   SOLO CSS: no requiere cambios en ningún .pug.
+   Engancha con las clases ya existentes:
+     .barra .logo .links .usuario  ·  .contenido  ·  .error
+     form / label / input  ·  button  ·  .tabla (th/td)
+   ============================================================ */
+
+/* Tipografías traídas por @import (sin tocar el HTML).
+   Debe ir como PRIMERA regla del archivo o el navegador la ignora. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  /* Chrome / superficies */
+  --ink: #0F1A2E;          /* barra superior y encabezados fuertes */
+  --app-bg: #EEF2F7;       /* fondo de la app: hace "flotar" los paneles */
+  --surface: #FFFFFF;      /* paneles: tablas y formularios */
+  --border: #DDE4EE;
+  --border-2: #E7ECF3;
+
+  /* Texto */
+  --text: #1E293B;
+  --muted: #64748B;
+  --faint: #94A3B8;
+
+  /* Acento (acciones / enlaces) */
+  --accent: #0E7C86;
+  --accent-strong: #0B626A;
+  --accent-soft: #E4F1F2;
+
+  /* Estados de stock (semánticos) */
+  --bajo-fg: #B42318; --bajo-bg: #FEE4E2; --bajo-bd: #FDA29B;
+  --repo-fg: #B54708; --repo-bg: #FEF0C7; --repo-bd: #FEC84B;
+  --ok-fg:   #067647; --ok-bg:   #DCFAE6; --ok-bd:   #75E0A7;
+
+  /* Otros */
+  --radius: 10px;
+  --radius-sm: 7px;
+  --shadow: 0 1px 2px rgba(15,26,46,.04), 0 6px 16px rgba(15,26,46,.06);
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--app-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- Barra superior (consola de operaciones) ---------- */
+.barra {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0 1.5rem;
+  min-height: 60px;
+  background: var(--ink);
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.barra .logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -.02em;
+  color: #fff;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+}
+/* Marca de acento antes del nombre */
+.barra .logo::before {
+  content: "";
+  width: 9px; height: 9px;
+  border-radius: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(14,124,134,.25);
+}
+.barra .links {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  margin-left: auto;
+}
+.barra .links a {
+  color: #C8D2E0;
+  text-decoration: none;
+  font-size: .92rem;
+  font-weight: 500;
+  padding: .45rem .7rem;
+  border-radius: var(--radius-sm);
+  transition: color .15s ease, background-color .15s ease;
+}
+.barra .links a:hover { color: #fff; background: rgba(255,255,255,.08); }
+.barra .usuario {
+  color: var(--faint);
+  font-size: .85rem;
+  padding-left: .6rem;
+  margin-left: .25rem;
+  border-left: 1px solid rgba(255,255,255,.12);
+}
+/* "Salir" diferenciado (acción destructiva suave) */
+.barra .links a[href="/logout"] { color: #FCA5A5; }
+.barra .links a[href="/logout"]:hover { color: #fff; background: rgba(239,68,68,.18); }
+/* "Ingresar" como acción primaria */
+.barra .links a[href="/login"] { color: #fff; background: var(--accent); }
+.barra .links a[href="/login"]:hover { background: var(--accent-strong); color: #fff; }
+
+/* ---------- Contenedor de contenido ---------- */
+.contenido {
+  max-width: 1080px;
+  margin: 2.5rem auto;
+  padding: 0 1.5rem;
+}
+.contenido h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.1rem;
+  letter-spacing: -.03em;
+  margin: 0 0 .35rem;
+  color: var(--ink);
+}
+.contenido h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.35rem;
+  letter-spacing: -.02em;
+  margin: 2rem 0 .75rem;
+  color: var(--ink);
+}
+.contenido p { line-height: 1.6; color: var(--text); }
+.contenido a { color: var(--accent); text-decoration: none; font-weight: 500; }
+.contenido a:hover { text-decoration: underline; }
+
+/* ---------- Mensajes ---------- */
+.error {
+  color: var(--bajo-fg);
+  background: var(--bajo-bg);
+  border: 1px solid var(--bajo-bd);
+  border-left-width: 4px;
+  padding: .7rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: .92rem;
+  margin: 1rem 0;
+}
+
+/* ---------- Formularios (panel) ---------- */
+form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem 1.6rem;
+  max-width: 440px;
+  margin: 1.25rem 0;
+}
+form label {
+  display: block;
+  margin: 0 0 1rem;
+  font-size: .88rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+form input, form select, form textarea {
+  display: block;
+  width: 100%;
+  margin-top: .4rem;
+  padding: .6rem .7rem;
+  font: inherit;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+form input:focus, form select:focus, form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* ---------- Botones ---------- */
+button {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: .92rem;
+  padding: .6rem 1.2rem;
+  background: var(--accent);
+  color: #fff;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+button:hover { background: var(--accent-strong); }
+
+/* ---------- Tablas (panel de datos) ---------- */
+.tabla {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  font-variant-numeric: tabular-nums;
+  margin: 1rem 0;
+}
+.tabla th {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: .72rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--muted);
+  background: var(--app-bg);
+  padding: .7rem .9rem;
+  border-bottom: 1px solid var(--border);
+}
+.tabla td {
+  text-align: left;
+  padding: .7rem .9rem;
+  border-bottom: 1px solid var(--border-2);
+  font-size: .94rem;
+}
+.tabla tbody tr:last-child td { border-bottom: 0; }
+.tabla tbody tr:hover td { background: #F7FAFC; }
+/* Helper opcional para columnas numéricas: agregá class="num" en th/td */
+.tabla .num { text-align: right; }
+
+/* ---------- Badges de estado de stock ----------
+   Listos para el reporte de reposición. Uso en Pug, cuando lo armes:
+     span.estado.bajo Bajo stock
+     span.estado.reposicion Reposición
+     span.estado.ok OK
+   (no se aplican solos: necesitan que la vista los emita)             */
+.estado {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .76rem;
+  font-weight: 600;
+  padding: .2rem .55rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  line-height: 1.4;
+}
+.estado::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.estado.bajo       { color: var(--bajo-fg); background: var(--bajo-bg); border-color: var(--bajo-bd); }
+.estado.reposicion { color: var(--repo-fg); background: var(--repo-bg); border-color: var(--repo-bd); }
+.estado.ok         { color: var(--ok-fg);   background: var(--ok-bg);   border-color: var(--ok-bd); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .barra { flex-wrap: wrap; gap: .5rem .75rem; padding: .6rem 1rem; }
+  .barra .links { flex-wrap: wrap; gap: .2rem; }
+  .contenido { margin: 1.5rem auto; padding: 0 1rem; }
+  .contenido h1 { font-size: 1.7rem; }
+  form { max-width: 100%; }
+}
+
+/* ---------- Accesibilidad ---------- */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--accent-soft);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
