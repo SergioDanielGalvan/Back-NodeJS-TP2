@@ -1,4 +1,4 @@
-// src/rutas/vistas.js
+// src/rutas/Vistas.js
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
