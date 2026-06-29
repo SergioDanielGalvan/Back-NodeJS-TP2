@@ -14,7 +14,7 @@ import operadoresRouter from "./src/rutas/OperadoresRouter.js";
 import comprasRouter from "./src/rutas/ComprasRouter.js";
 import ventasRouter from "./src/rutas/VentasRouter.js";
 import recibosRouter from "./src/rutas/RecibosRouter.js";
-import vistasRouter from "./src/rutas/Vistas.js";         // ⬅️ NUEVO
+import vistasRouter from "./src/rutas/vistas.js";         // ⬅️ NUEVO
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
