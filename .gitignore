@@ -2,3 +2,6 @@ node_modules
 src/documentacion
 src/Bases
 .env
+*.mp4
+node_modules/
+.env
