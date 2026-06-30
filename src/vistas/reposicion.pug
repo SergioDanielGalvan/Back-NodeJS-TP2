@@ -1,0 +1,59 @@
+extends ../layout
+
+block contenido
+  h1 Reposición de stock
+
+  if error
+    p.error= error
+
+  p.resumen #{reporte.bajoStock.cantidad} en bajo stock · #{reporte.reposicion.cantidad} en reposición
+
+  h2 Bajo stock
+  p.zona-desc Saldo por debajo del stock mínimo.
+  if reporte.bajoStock.items.length
+    table.tabla
+      thead
+        tr
+          th Producto
+          th.num Saldo
+          th.num Mínimo
+          th.num Punto pedido
+          th.num Faltante
+          th Estado
+      tbody
+        each p in reporte.bajoStock.items
+          tr
+            td= p.nombre
+            td.num= p.saldo
+            td.num= p.stockMinimo
+            td.num= p.puntoPedido
+            td.num= p.faltante
+            td
+              span.estado.bajo Bajo stock
+  else
+    p.vacio Ningún producto por debajo del mínimo.
+
+  h2 Reposición
+  p.zona-desc Saldo entre el mínimo y el punto de pedido.
+  if reporte.reposicion.items.length
+    table.tabla
+      thead
+        tr
+          th Producto
+          th.num Saldo
+          th.num Mínimo
+          th.num Punto pedido
+          th.num Sugerido reponer
+          th Estado
+      tbody
+        each p in reporte.reposicion.items
+          tr
+            td= p.nombre
+            td.num= p.saldo
+            td.num= p.stockMinimo
+            td.num= p.puntoPedido
+            td.num= p.sugeridoReponer
+            td
+              span.estado.reposicion Reposición
+  else
+    p.vacio Ningún producto en zona de reposición.

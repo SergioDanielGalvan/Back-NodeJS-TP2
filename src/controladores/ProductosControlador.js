@@ -352,10 +352,10 @@ export const getReporteStock = async (req, res) => {
 
 // --------------------------------------------------------------
 // Devuelve datos del reporte de reposición (no escribe en res) para reusar en la vista Pug.
-// --------------------------------------------------------------
-export async function obtenerReporteReposicion() {
+export const obtenerReporteReposicion = async () => {
   return await getReporteReposicion();
-}
+};
+// --------------------------------------------------------------
 
 // --------------------------------------------------------------
 // Resumen de stock por producto CON nombre del maestro.
