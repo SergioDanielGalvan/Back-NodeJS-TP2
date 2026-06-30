@@ -4,8 +4,10 @@ import Producto, {
   getSaldoLote as getSaldoLoteModel,
   getSaldoProducto as getSaldoProductoModel,
   getProductosPorVencer,
+  getReporteReposicion,
   getReporteReposicion
 } from "../modelos/Productos.js";
+
 import DetalleVenta from "../modelos/DetalleVenta.js";
 
 // Total vendido por lote (desde DetalleVenta). Si se pasan idLotes, filtra.
@@ -347,6 +349,13 @@ export const getReporteStock = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// --------------------------------------------------------------
+// Devuelve datos del reporte de reposición (no escribe en res) para reusar en la vista Pug.
+// --------------------------------------------------------------
+export async function obtenerReporteReposicion() {
+  return await getReporteReposicion();
+}
 
 // --------------------------------------------------------------
 // Resumen de stock por producto CON nombre del maestro.

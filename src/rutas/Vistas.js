@@ -3,9 +3,10 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/jwt.js";
+import { verificarToken } from "../middlewares/auth.js";
 
 import Operador from "../modelos/Operador.js";
-import { obtenerResumenStock } from "../controladores/ProductosControlador.js";  // ⬅️
+import { obtenerResumenStock, obtenerReporteReposicion } from "../controladores/ProductosControlador.js";
 
 const router = express.Router();
 
@@ -52,6 +53,34 @@ router.get("/consultas/stock", async (req, res) => {
     res.status(500).render("consultas/stock", {
       productos: [],
       error: "No se pudo cargar el stock",
+    });
+  }
+});
+
+// --- Reporte de reposición (requiere login) ---
+router.get("/reportes/reposicion", async (req, res) => {
+  try {
+    const reporte = await obtenerReporteReposicion();
+    res.render("reportes/reposicion", { reporte, error: null });
+  } catch (err) {
+    console.error("Error al generar reporte de reposición:", err);
+    res.status(500).render("reportes/reposicion", {
+      reporte: { bajoStock: { cantidad: 0, items: [] }, reposicion: { cantidad: 0, items: [] } },
+      error: "No se pudo generar el reporte",
+    });
+  }
+});
+
+// --- Reporte de reposición (requiere login) ---
+router.get("/reportes/reposicion", verificarToken, async (req, res) => {
+  try {
+    const reporte = await obtenerReporteReposicion();
+    res.render("reportes/reposicion", { reporte, error: null });
+  } catch (err) {
+    console.error("Error al generar reporte de reposición:", err);
+    res.status(500).render("reportes/reposicion", {
+      reporte: { bajoStock: { cantidad: 0, items: [] }, reposicion: { cantidad: 0, items: [] } },
+      error: "No se pudo generar el reporte",
     });
   }
 });

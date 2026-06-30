@@ -263,6 +263,10 @@ button:hover { background: var(--accent-strong); }
 .estado.reposicion { color: var(--repo-fg); background: var(--repo-bg); border-color: var(--repo-bd); }
 .estado.ok         { color: var(--ok-fg);   background: var(--ok-bg);   border-color: var(--ok-bd); }
 
+.resumen { color: var(--muted); font-size: .92rem; margin: 0 0 1.5rem; }
+.zona-desc { color: var(--muted); font-size: .88rem; margin: -.25rem 0 .75rem; }
+.vacio { color: var(--faint); font-style: italic; padding: .5rem 0; }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 640px) {
   .barra { flex-wrap: wrap; gap: .5rem .75rem; padding: .6rem 1rem; }
