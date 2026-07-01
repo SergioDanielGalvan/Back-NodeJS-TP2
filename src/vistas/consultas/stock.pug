@@ -11,6 +11,8 @@ block contenido
           th Producto
           th Saldo total
           th Lotes
+          th.num Precio venta
+          th.num Valor
       tbody
         each p in productos
           tr
@@ -18,5 +20,7 @@ block contenido
             td= p.nombre
             td= p.saldoTotal
             td= p.cantidadLotes
+            td.num= p.precioVenta.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })
+            td.num= (p.saldoTotal * p.precioVenta).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })
   else
     p No hay productos para mostrar.

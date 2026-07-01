@@ -386,6 +386,7 @@ export const obtenerResumenStock = async () => {
   return Object.values(resumen).map(r => ({
     ...r,
     nombre: mapaMaestro.get(r.idProducto)?.nombre || "(sin nombre)",
+    precioVenta: m?.precioventa ?? 0,   // ← del maestro (precioventa, minúscula)
   }));
 };
 
