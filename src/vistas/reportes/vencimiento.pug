@@ -1,0 +1,42 @@
+extends ../layout
+
+block contenido
+  h1 Próximos a vencer
+
+  if error
+    p.error= error
+
+  form.filtro-dias(method="GET", action="/reportes/vencimiento")
+    label Días
+      input(type="number", name="dias", value=reporte.dias, min="0")
+    button(type="submit") Ver
+
+  p.resumen #{reporte.cantidad} lotes vencen en los próximos #{reporte.dias} días
+
+  if reporte.items.length
+    table.tabla
+      thead
+        tr
+          th Producto
+          th.num Lote
+          th Vence
+          th.num Saldo
+          th.num Días
+          th Estado
+      tbody
+        each l in reporte.items
+          tr
+            td= l.nombreProducto || "(sin nombre)"
+            td.num= l.idLote
+            td= new Date(l.fechaVencimiento).toLocaleDateString('es-AR')
+            td.num= l.saldo
+            td.num= l.diasParaVencer
+            td
+              if l.diasParaVencer <= 7
+                span.estado.bajo Crítico
+              else if l.diasParaVencer <= 15
+                span.estado.reposicion Próximo
+              else
+                span.estado.ok En rango
+  else
+    p.vacio Ningún lote vence en esa ventana.

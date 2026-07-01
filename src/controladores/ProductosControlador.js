@@ -523,3 +523,11 @@ export const crearRegistroCompra = async (req, res) => {
     res.status(500).json({ error: "Error al procesar la compra" });
   }
 };
+
+// --------------------------------------------------------------
+// Reporte "próximos a vencer": lotes que vencen dentro de `dias` días (con saldo).
+// --------------------------------------------------------------
+export const obtenerReporteVencimiento = async (dias = 30) => {
+  const items = await getProductosPorVencer(dias);
+  return { dias, cantidad: items.length, items };
+};

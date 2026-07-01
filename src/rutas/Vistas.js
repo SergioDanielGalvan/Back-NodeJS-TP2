@@ -9,6 +9,7 @@ import {
   obtenerResumenStock,
   obtenerReporteReposicion,
   obtenerIndiceReportes,
+  obtenerReporteVencimiento
 } from "../controladores/ProductosControlador.js";
 import { verificarToken } from "../middlewares/auth.js";
 
@@ -90,3 +91,19 @@ router.get("/reportes", verificarToken, async (req, res) => {
 });
 
 export default router;
+
+// --- EndPoint de Reportes Vencimiento ---
+router.get("/reportes/vencimiento", verificarToken, async (req, res) => {
+  try {
+    let dias = Number(req.query.dias);
+    if (!Number.isFinite(dias) || dias < 0) dias = 30;
+    const reporte = await obtenerReporteVencimiento(dias);
+    res.render("reportes/vencimiento", { reporte, error: null });
+  } catch (err) {
+    console.error("Error en reporte de vencimiento:", err);
+    res.status(500).render("reportes/vencimiento", {
+      reporte: { dias: 30, cantidad: 0, items: [] },
+      error: "No se pudo generar el reporte",
+    });
+  }
+});
