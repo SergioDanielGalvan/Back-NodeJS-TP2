@@ -383,14 +383,15 @@ export const obtenerResumenStock = async () => {
   const productosMaestro = await MaestroProducto.obtenerTodos();
   const mapaMaestro = new Map(productosMaestro.map(p => [p.idProducto, p]));
 
-return Object.values(resumen).map(r => {
-  const m = mapaMaestro.get(r.idProducto);
-  return {
-    ...r,
-    nombre: m?.nombre || "(sin nombre)",
-    precioVenta: m?.precioventa ?? 0,
-  };
-});
+  return Object.values(resumen).map(r => {
+    const m = mapaMaestro.get(r.idProducto);
+    return {
+      ...r,
+      nombre: m?.nombre || "(sin nombre)",
+      precioVenta: m?.precioventa ?? 0,
+    };
+  });
+};
 
 // --------------------------------------------------------------
 // Crear un nuevo lote (producto en inventario)
