@@ -255,4 +255,31 @@ export async function getReporteReposicion() {
   };
 }
 
+// Valor total del inventario: suma (saldo × precioventa) de todos los productos.
+export async function getValorInventarioTotal() {
+  const [maestro, productos, mapaVentas] = await Promise.all([
+    MaestroProducto.find().lean(),
+    Producto.find().select("idLote idProducto stock").lean(),
+    ventasPorLote(),
+  ]);
+
+  const saldoPorProducto = {};
+  for (const lote of productos) {
+    const saldo = lote.stock - (mapaVentas.get(lote.idLote) || 0);
+    saldoPorProducto[lote.idProducto] = (saldoPorProducto[lote.idProducto] || 0) + saldo;
+  }
+
+  let valorTotal = 0;
+  const items = maestro.map((p) => {
+    const saldo = saldoPorProducto[p.idProducto] || 0;
+    const precio = p.precioventa || 0;
+    const valor = saldo * precio;
+    valorTotal += valor;
+    return { idProducto: p.idProducto, nombre: p.nombre, saldo, precioVenta: precio, valor };
+  });
+
+  items.sort((a, b) => b.valor - a.valor); // los de mayor valor primero
+  return { valorTotal, items };
+}
+
 export default Producto;

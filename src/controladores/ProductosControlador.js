@@ -394,6 +394,13 @@ export const obtenerResumenStock = async () => {
 };
 
 // --------------------------------------------------------------
+// Índice de reportes (por ahora sin datos; a futuro puede traer contadores).
+// --------------------------------------------------------------
+export const obtenerIndiceReportes = async () => {
+  return { ok: true };
+};
+
+// --------------------------------------------------------------
 // Crear un nuevo lote (producto en inventario)
 // --------------------------------------------------------------
 export const createProducto = async (req, res) => {

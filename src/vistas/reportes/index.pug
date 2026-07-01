@@ -1,0 +1,18 @@
+extends ../layout
+
+block contenido
+  h1 Reportes
+
+  if error
+    p.error= error
+
+  ul.reportes
+    li
+      a(href="/reportes/reposicion") Reposición de stock
+      span.desc Productos bajo el mínimo o en zona de reposición.
+    li
+      a(href="/reportes/vencimiento") Próximos a vencer
+      span.desc Lotes que vencen dentro de los próximos días.
+    li
+      a(href="/reportes/valor") Valor de inventario
+      span.desc Valorización del stock a precio de venta.

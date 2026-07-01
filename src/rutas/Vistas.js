@@ -77,4 +77,15 @@ router.get("/reportes/reposicion", verificarToken, async (req, res) => {
   }
 });
 
+// --- Index de Reportes ---
+router.get("/reportes", verificarToken, async (req, res) => {
+  try {
+    await obtenerIndiceReportes();
+    res.render("reportes/index", { error: null });
+  } catch (err) {
+    console.error("Error en índice de reportes:", err);
+    res.status(500).render("reportes/index", { error: "No se pudo cargar" });
+  }
+});
+
 export default router;
