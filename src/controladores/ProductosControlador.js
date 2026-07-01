@@ -4,7 +4,8 @@ import Producto, {
   getSaldoLote as getSaldoLoteModel,
   getSaldoProducto as getSaldoProductoModel,
   getProductosPorVencer,
-  getReporteReposicion
+  getReporteReposicion,
+  getValorInventarioTotal
 } from "../modelos/Productos.js";
 
 import DetalleVenta from "../modelos/DetalleVenta.js";
@@ -530,4 +531,11 @@ export const crearRegistroCompra = async (req, res) => {
 export const obtenerReporteVencimiento = async (dias = 30) => {
   const items = await getProductosPorVencer(dias);
   return { dias, cantidad: items.length, items };
+};
+
+// --------------------------------------------------------------
+// Reporte de valor de inventario (saldo × precio de venta, total y por producto).
+// --------------------------------------------------------------
+export const obtenerReporteValor = async () => {
+  return await getValorInventarioTotal();
 };

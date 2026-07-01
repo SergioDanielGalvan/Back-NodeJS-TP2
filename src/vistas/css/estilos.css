@@ -273,6 +273,10 @@ button:hover { background: var(--accent-strong); }
 .filtro-dias label { display: flex; flex-direction: column; font-size: .85rem; color: var(--muted); gap: .3rem; margin: 0; }
 .filtro-dias input { width: 120px; }
 
+.total-card { display: flex; flex-direction: column; gap: .3rem; background: var(--ink); color: #fff; border-radius: var(--radius); padding: 1.4rem 1.6rem; margin: 1rem 0 1.5rem; box-shadow: var(--shadow); }
+.total-label { font-size: .85rem; color: #C8D2E0; text-transform: uppercase; letter-spacing: .04em; }
+.total-monto { font-family: var(--font-display); font-weight: 700; font-size: 2rem; letter-spacing: -.02em; }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 640px) {
   .barra { flex-wrap: wrap; gap: .5rem .75rem; padding: .6rem 1rem; }

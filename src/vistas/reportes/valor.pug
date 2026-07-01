@@ -1,0 +1,29 @@
+extends ../layout
+
+block contenido
+  h1 Valor de inventario
+
+  if error
+    p.error= error
+
+  .total-card
+    span.total-label Valor total del stock
+    span.total-monto= reporte.valorTotal.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })
+
+  if reporte.items.length
+    table.tabla
+      thead
+        tr
+          th Producto
+          th.num Saldo
+          th.num Precio venta
+          th.num Valor
+      tbody
+        each p in reporte.items
+          tr
+            td= p.nombre
+            td.num= p.saldo
+            td.num= p.precioVenta.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })
+            td.num= p.valor.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })
+  else
+    p.vacio No hay productos con stock para valorizar.

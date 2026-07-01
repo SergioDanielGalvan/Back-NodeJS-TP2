@@ -107,3 +107,17 @@ router.get("/reportes/vencimiento", verificarToken, async (req, res) => {
     });
   }
 });
+
+// --- EndPoint de Reportes Valor ---
+router.get("/reportes/valor", verificarToken, async (req, res) => {
+  try {
+    const reporte = await obtenerReporteValor();
+    res.render("reportes/valor", { reporte, error: null });
+  } catch (err) {
+    console.error("Error en reporte de valor:", err);
+    res.status(500).render("reportes/valor", {
+      reporte: { valorTotal: 0, items: [] },
+      error: "No se pudo generar el reporte",
+    });
+  }
+});
