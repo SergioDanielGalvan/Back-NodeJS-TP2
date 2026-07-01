@@ -9,7 +9,8 @@ import {
   obtenerResumenStock,
   obtenerReporteReposicion,
   obtenerIndiceReportes,
-  obtenerReporteVencimiento
+  obtenerReporteVencimiento,
+  obtenerReporteValor
 } from "../controladores/ProductosControlador.js";
 import { verificarToken } from "../middlewares/auth.js";
 
