@@ -4,7 +4,6 @@ import Producto, {
   getSaldoLote as getSaldoLoteModel,
   getSaldoProducto as getSaldoProductoModel,
   getProductosPorVencer,
-  getReporteReposicion,
   getReporteReposicion
 } from "../modelos/Productos.js";
 
