@@ -8,6 +8,7 @@ import Operador from "../modelos/Operador.js";
 import {
   obtenerResumenStock,
   obtenerReporteReposicion,
+  obtenerIndiceReportes,
 } from "../controladores/ProductosControlador.js";
 import { verificarToken } from "../middlewares/auth.js";
 
