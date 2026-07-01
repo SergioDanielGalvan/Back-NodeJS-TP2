@@ -19,7 +19,7 @@ router.get("/login", (req, res) => res.render("login", { error: null }));
 router.post("/login", async (req, res) => {
   const { usuario, clave } = req.body;
   try {
-    const op = await Operador.findOne({ usuario });
+    const op = await Operador.findOne({ email: usuario });
     if (!op || !(await bcrypt.compare(clave, op.claveHash))) {
       return res.render("login", { error: "Usuario o clave incorrectos" });
     }
