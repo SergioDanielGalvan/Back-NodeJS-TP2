@@ -3,16 +3,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/jwt.js";
-
 import Operador from "../modelos/Operador.js";
-import {
-  obtenerResumenStock,
-  obtenerReporteReposicion,
-  obtenerIndiceReportes,
-  obtenerReporteVencimiento,
-  obtenerReporteValor
-} from "../controladores/ProductosControlador.js";
-
 import { verificarToken } from "../middlewares/auth.js";
 
 import {
