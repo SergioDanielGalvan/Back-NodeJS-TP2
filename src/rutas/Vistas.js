@@ -12,7 +12,21 @@ import {
   obtenerReporteVencimiento,
   obtenerReporteValor
 } from "../controladores/ProductosControlador.js";
+
 import { verificarToken } from "../middlewares/auth.js";
+
+import {
+  obtenerResumenStock,
+  obtenerReporteReposicion,
+  obtenerIndiceReportes,
+  obtenerReporteVencimiento,
+  obtenerReporteValor,
+  listarMaestro,
+  obtenerMaestroPorId,
+  crearMaestro,
+  actualizarMaestro,
+  eliminarMaestro,
+} from "../controladores/ProductosControlador.js";
 
 const router = express.Router();
 
@@ -120,5 +134,69 @@ router.get("/reportes/valor", verificarToken, async (req, res) => {
       reporte: { valorTotal: 0, items: [] },
       error: "No se pudo generar el reporte",
     });
+  }
+});
+
+// --- ABM MaestroProducto (requiere login) ---
+
+// Listado
+router.get("/maestro", verificarToken, async (req, res) => {
+  try {
+    const productos = await listarMaestro();
+    res.render("maestro/index", { productos, error: null });
+  } catch (err) {
+    console.error("Error al listar maestro:", err);
+    res.status(500).render("maestro/index", { productos: [], error: "No se pudo cargar" });
+  }
+});
+
+// Form de alta (vacío)
+router.get("/maestro/nuevo", verificarToken, (req, res) => {
+  res.render("maestro/form", { producto: null, error: null });
+});
+
+// Form de edición (precargado)
+router.get("/maestro/:id/editar", verificarToken, async (req, res) => {
+  try {
+    const producto = await obtenerMaestroPorId(req.params.id);
+    if (!producto) return res.status(404).render("404");
+    res.render("maestro/form", { producto, error: null });
+  } catch (err) {
+    console.error("Error al cargar producto:", err);
+    res.status(500).render("maestro/form", { producto: null, error: "No se pudo cargar" });
+  }
+});
+
+// Crear (POST)
+router.post("/maestro", verificarToken, async (req, res) => {
+  try {
+    const operador = res.locals.operador?.nombre || "sistema";
+    await crearMaestro(req.body, operador);
+    res.redirect("/maestro");
+  } catch (err) {
+    console.error("Error al crear producto:", err);
+    res.status(400).render("maestro/form", { producto: req.body, error: err.message });
+  }
+});
+
+// Actualizar (PUT vía methodOverride)
+router.put("/maestro/:id", verificarToken, async (req, res) => {
+  try {
+    await actualizarMaestro(req.params.id, req.body);
+    res.redirect("/maestro");
+  } catch (err) {
+    console.error("Error al actualizar producto:", err);
+    res.status(400).render("maestro/form", { producto: { ...req.body, idProducto: req.params.id }, error: err.message });
+  }
+});
+
+// Eliminar (DELETE vía methodOverride)
+router.delete("/maestro/:id", verificarToken, async (req, res) => {
+  try {
+    await eliminarMaestro(req.params.id);
+    res.redirect("/maestro");
+  } catch (err) {
+    console.error("Error al eliminar producto:", err);
+    res.redirect("/maestro");
   }
 });

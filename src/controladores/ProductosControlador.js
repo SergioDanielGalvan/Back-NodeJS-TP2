@@ -539,3 +539,48 @@ export const obtenerReporteVencimiento = async (dias = 30) => {
 export const obtenerReporteValor = async () => {
   return await getValorInventarioTotal();
 };
+
+// --- ABM MaestroProducto ---
+
+// Listado completo del maestro.
+export const listarMaestro = async () => {
+  return await MaestroProducto.obtenerTodos();
+};
+
+// Un producto por idProducto (para el form de edición).
+export const obtenerMaestroPorId = async (id) => {
+  return await MaestroProducto.obtenerPorId(id);
+};
+
+// Alta: idProducto auto-calculado. Lanza error legible si el EAN ya existe.
+export const crearMaestro = async (datos, operador = "sistema") => {
+  const existe = await MaestroProducto.getProductoByEAN(datos.EAN);
+  if (existe) throw new Error("Ya existe un producto con ese EAN");
+
+  const idProducto = await MaestroProducto.siguienteId();
+  return await MaestroProducto.guardar({
+    idProducto,
+    nombre: datos.nombre,
+    EAN: datos.EAN,
+    precioventa: Number(datos.precioventa) || 0,
+    stockMinimo: Number(datos.stockMinimo) || 0,
+    puntoPedido: Number(datos.puntoPedido) || 0,
+    operador,
+  });
+};
+
+// Edición por idProducto.
+export const actualizarMaestro = async (id, datos) => {
+  return await MaestroProducto.actualizar(id, {
+    nombre: datos.nombre,
+    EAN: datos.EAN,
+    precioventa: Number(datos.precioventa) || 0,
+    stockMinimo: Number(datos.stockMinimo) || 0,
+    puntoPedido: Number(datos.puntoPedido) || 0,
+  });
+};
+
+// Baja por idProducto.
+export const eliminarMaestro = async (id) => {
+  return await MaestroProducto.eliminar(id);
+};

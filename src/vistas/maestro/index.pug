@@ -1,0 +1,36 @@
+extends ../layout
+
+block contenido
+  h1 Maestro de productos
+
+  if error
+    p.error= error
+
+  a.btn-nuevo(href="/maestro/nuevo") + Nuevo producto
+
+  if productos.length
+    table.tabla
+      thead
+        tr
+          th.num ID
+          th Nombre
+          th EAN
+          th.num Precio venta
+          th.num Mínimo
+          th.num Punto pedido
+          th Acciones
+      tbody
+        each p in productos
+          tr
+            td.num= p.idProducto
+            td= p.nombre
+            td= p.EAN
+            td.num= (p.precioventa || 0).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })
+            td.num= p.stockMinimo
+            td.num= p.puntoPedido
+            td.acciones
+              a(href=`/maestro/${p.idProducto}/editar`) Editar
+              form(method="POST", action=`/maestro/${p.idProducto}?_method=DELETE`, onsubmit="return confirm('¿Eliminar este producto?')")
+                button.btn-borrar(type="submit") Borrar
+  else
+    p.vacio No hay productos cargados.

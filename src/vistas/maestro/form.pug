@@ -1,0 +1,26 @@
+extends ../layout
+
+block contenido
+  h1= producto ? "Editar producto" : "Nuevo producto"
+
+  if error
+    p.error= error
+
+  - const esEdicion = !!producto
+  - const accion = esEdicion ? `/maestro/${producto.idProducto}?_method=PUT` : "/maestro"
+
+  form(method="POST", action=accion)
+    label Nombre
+      input(type="text", name="nombre", value=producto ? producto.nombre : "", required)
+    label EAN
+      input(type="text", name="EAN", value=producto ? producto.EAN : "", required)
+    label Precio de venta
+      input(type="number", name="precioventa", step="0.01", min="0", value=producto ? producto.precioventa : "0")
+    label Stock mínimo
+      input(type="number", name="stockMinimo", min="0", value=producto ? producto.stockMinimo : "0")
+    label Punto de pedido
+      input(type="number", name="puntoPedido", min="0", value=producto ? producto.puntoPedido : "0")
+
+    .acciones-form
+      button(type="submit")= esEdicion ? "Guardar cambios" : "Crear producto"
+      a.cancelar(href="/maestro") Cancelar

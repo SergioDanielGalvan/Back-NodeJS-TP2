@@ -145,4 +145,10 @@ const MaestroProducto = mongoose.model(
   maestroProductoSchema,
 );
 
+// Próximo idProducto = máximo actual + 1 (el maestro no tiene auto-incremento).
+maestroProductoSchema.statics.siguienteId = async function () {
+  const ultimo = await this.findOne().sort({ idProducto: -1 }).lean();
+  return ultimo ? ultimo.idProducto + 1 : 1;
+};
+
 export default MaestroProducto;
